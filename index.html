@@ -21,7 +21,6 @@
     :root{
       --bg:#f8f6f1;
       --surface:#ffffff;
-      --surface-soft:#f1eee7;
       --text:#171717;
       --muted:#77736b;
       --border:#e7e2d8;
@@ -98,7 +97,6 @@
       color:var(--muted);
       font-size:12px;
       margin-top:2px;
-      letter-spacing:.2px;
     }
 
     /* ================= SEARCH ================= */
@@ -117,7 +115,6 @@
       background:#faf9f6;
       color:var(--text);
       outline:none;
-      transition:.25s ease;
     }
 
     .search-box input:focus{
@@ -132,7 +129,6 @@
       top:50%;
       transform:translateY(-50%);
       color:#8b877f;
-      font-size:17px;
       pointer-events:none;
     }
 
@@ -148,7 +144,6 @@
       margin:auto;
       padding:12px 5%;
       display:flex;
-      align-items:center;
       gap:9px;
       overflow-x:auto;
       scrollbar-width:none;
@@ -174,7 +169,6 @@
     .category-btn:hover{
       border-color:var(--accent);
       color:var(--accent-dark);
-      transform:translateY(-1px);
     }
 
     .category-btn.active{
@@ -209,7 +203,6 @@
       font-size:clamp(38px,6vw,68px);
       line-height:1.05;
       letter-spacing:-2px;
-      font-weight:700;
     }
 
     .hero h1 span{
@@ -224,7 +217,7 @@
       line-height:1.7;
     }
 
-    /* ================= PRODUCT AREA ================= */
+    /* ================= CONTAINER ================= */
 
     .container{
       max-width:1320px;
@@ -240,7 +233,8 @@
       margin-bottom:25px;
     }
 
-    .section-heading h2{
+    .section-heading h2,
+    .highlight-title{
       font-family:Georgia,"Times New Roman",serif;
       font-size:28px;
     }
@@ -250,50 +244,121 @@
       font-size:13px;
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:24px;
-    }
-
     /* ================= HIGHLIGHTS ================= */
 
     .highlights-section{
-      margin-bottom:65px;
+      margin-bottom:70px;
+      display:none;
     }
 
-    .highlight-heading{
+    .highlight-header{
       display:flex;
       align-items:end;
       justify-content:space-between;
+      margin-bottom:24px;
       gap:20px;
-      margin-bottom:25px;
     }
 
-    .highlight-title-wrap h2{
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:30px;
-    }
-
-    .highlight-title-wrap p{
+    .highlight-subtitle{
       color:var(--muted);
       font-size:13px;
       margin-top:5px;
     }
 
-    .highlight-badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 12px;
+    .featured-badge{
+      padding:7px 13px;
       border-radius:20px;
       background:#fff5dc;
       color:#8d6b32;
       border:1px solid #ead8ac;
       font-size:11px;
       font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.5px;
+      white-space:nowrap;
+    }
+
+    .carousel-wrap{
+      position:relative;
+    }
+
+    .carousel-viewport{
+      overflow:hidden;
+      width:100%;
+      border-radius:18px;
+    }
+
+    .carousel-track{
+      display:flex;
+      gap:24px;
+      transition:transform .55s ease;
+      will-change:transform;
+    }
+
+    .carousel-slide{
+      flex:0 0 calc((100% - 72px) / 4);
+      min-width:0;
+    }
+
+    .carousel-arrow{
+      position:absolute;
+      top:42%;
+      transform:translateY(-50%);
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      border:1px solid var(--border);
+      background:rgba(255,255,255,.96);
+      box-shadow:0 5px 18px rgba(0,0,0,.10);
+      cursor:pointer;
+      z-index:5;
+      font-size:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      transition:.2s ease;
+    }
+
+    .carousel-arrow:hover{
+      background:var(--dark);
+      color:#fff;
+    }
+
+    .carousel-prev{
+      left:-18px;
+    }
+
+    .carousel-next{
+      right:-18px;
+    }
+
+    .carousel-dots{
+      display:flex;
+      justify-content:center;
+      gap:7px;
+      margin-top:20px;
+    }
+
+    .carousel-dot{
+      width:7px;
+      height:7px;
+      border:0;
+      border-radius:50%;
+      background:#d4cec2;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .carousel-dot.active{
+      width:22px;
+      border-radius:10px;
+      background:var(--accent);
+    }
+
+    /* ================= GRID ================= */
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:24px;
     }
 
     /* ================= CARD ================= */
@@ -345,7 +410,6 @@
       padding:6px 10px;
       border-radius:20px;
       background:rgba(255,255,255,.93);
-      backdrop-filter:blur(5px);
       color:#625d54;
       font-size:10px;
       font-weight:800;
@@ -363,7 +427,6 @@
       color:#fff;
       font-size:10px;
       font-weight:800;
-      letter-spacing:.5px;
       text-transform:uppercase;
     }
 
@@ -411,15 +474,6 @@
 
     .price-btn:hover{
       background:var(--accent-dark);
-      transform:translateY(-1px);
-    }
-
-    .arrow{
-      transition:transform .25s ease;
-    }
-
-    .price-btn:hover .arrow{
-      transform:translateX(4px);
     }
 
     /* ================= LOADING ================= */
@@ -479,6 +533,10 @@
 
     @media(max-width:1050px){
 
+      .carousel-slide{
+        flex-basis:calc((100% - 24px) / 2);
+      }
+
       .grid{
         grid-template-columns:repeat(3,1fr);
       }
@@ -491,10 +549,13 @@
         order:3;
         width:100%;
       }
-
     }
 
     @media(max-width:760px){
+
+      .carousel-slide{
+        flex-basis:100%;
+      }
 
       .grid{
         grid-template-columns:repeat(2,1fr);
@@ -522,10 +583,13 @@
         min-height:58px;
       }
 
-      .highlight-heading{
-        align-items:flex-start;
+      .carousel-prev{
+        left:8px;
       }
 
+      .carousel-next{
+        right:8px;
+      }
     }
 
     @media(max-width:500px){
@@ -538,10 +602,6 @@
         font-size:24px;
       }
 
-      .tagline{
-        font-size:11px;
-      }
-
       .grid{
         grid-template-columns:1fr 1fr;
         gap:12px;
@@ -551,20 +611,9 @@
         padding-bottom:55px;
       }
 
-      .section-heading h2{
+      .section-heading h2,
+      .highlight-title{
         font-size:23px;
-      }
-
-      .highlight-title-wrap h2{
-        font-size:23px;
-      }
-
-      .section-heading{
-        margin-bottom:18px;
-      }
-
-      .highlight-heading{
-        margin-bottom:18px;
       }
 
       .info{
@@ -580,16 +629,10 @@
         font-size:12px;
       }
 
-      .category-label{
-        font-size:9px;
-        padding:5px 8px;
+      .carousel-arrow{
+        width:36px;
+        height:36px;
       }
-
-      .highlight-label{
-        font-size:8px;
-        padding:5px 7px;
-      }
-
     }
   </style>
 </head>
@@ -613,7 +656,6 @@
       </div>
 
     </div>
-
 
     <div class="search-box">
 
@@ -675,42 +717,80 @@
 </section>
 
 
-<!-- ================= PRODUCTS ================= -->
+<!-- ================= MAIN ================= -->
 
 <main class="container">
+
 
   <!-- ================= HIGHLIGHTS ================= -->
 
   <section
     id="highlightsSection"
     class="highlights-section"
-    style="display:none;"
   >
 
-    <div class="highlight-heading">
+    <div class="highlight-header">
 
-      <div class="highlight-title-wrap">
+      <div>
 
-        <h2>Highlights</h2>
+        <h2 class="highlight-title">
+          Highlights
+        </h2>
 
-        <p>
+        <p class="highlight-subtitle">
           Selected products worth a closer look.
         </p>
 
       </div>
 
-      <div class="highlight-badge">
+      <div class="featured-badge">
         ✦ Featured
       </div>
 
     </div>
 
 
-    <section
-      id="highlightGrid"
-      class="grid"
+    <div class="carousel-wrap">
+
+      <button
+        id="prevHighlight"
+        class="carousel-arrow carousel-prev"
+        aria-label="Previous highlight"
+      >
+        ‹
+      </button>
+
+
+      <div
+        id="highlightViewport"
+        class="carousel-viewport"
+      >
+
+        <div
+          id="highlightTrack"
+          class="carousel-track"
+        >
+        </div>
+
+      </div>
+
+
+      <button
+        id="nextHighlight"
+        class="carousel-arrow carousel-next"
+        aria-label="Next highlight"
+      >
+        ›
+      </button>
+
+    </div>
+
+
+    <div
+      id="highlightDots"
+      class="carousel-dots"
     >
-    </section>
+    </div>
 
   </section>
 
@@ -719,7 +799,9 @@
 
   <div class="section-heading">
 
-    <h2>Curated Finds</h2>
+    <h2>
+      Curated Finds
+    </h2>
 
     <div
       class="product-count"
@@ -798,15 +880,21 @@ let currentCategory = "All";
 let searchTerm = "";
 
 
+/* ================= CAROUSEL ================= */
+
+let highlightProducts = [];
+
+let highlightIndex = 0;
+
+let highlightTimer = null;
+
+
 /* ================= LOAD PRODUCTS ================= */
 
 async function loadProducts(){
 
   const grid =
     document.getElementById("productGrid");
-
-  const highlightGrid =
-    document.getElementById("highlightGrid");
 
 
   grid.innerHTML = `
@@ -843,12 +931,6 @@ async function loadProducts(){
       </div>
     `;
 
-    document.getElementById("productCount")
-      .textContent = "";
-
-    document.getElementById("highlightsSection")
-      .style.display = "none";
-
     return;
   }
 
@@ -865,30 +947,7 @@ async function loadProducts(){
 }
 
 
-/* ================= HIGHLIGHTS ================= */
-
-function isHighlightActive(product){
-
-  if(!product.is_highlighted){
-    return false;
-  }
-
-  if(!product.highlight_start || !product.highlight_end){
-    return false;
-  }
-
-
-  const today =
-    getLocalDateString();
-
-
-  return (
-    today >= product.highlight_start &&
-    today <= product.highlight_end
-  );
-
-}
-
+/* ================= DATE ================= */
 
 function getLocalDateString(){
 
@@ -907,30 +966,74 @@ function getLocalDateString(){
 
 
   return `${year}-${month}-${day}`;
+}
+
+
+function isHighlightActive(product){
+
+  if(!product.is_highlighted){
+    return false;
+  }
+
+  if(
+    !product.highlight_start ||
+    !product.highlight_end
+  ){
+    return false;
+  }
+
+
+  const today =
+    getLocalDateString();
+
+
+  return (
+    today >= product.highlight_start &&
+    today <= product.highlight_end
+  );
 
 }
 
 
+/* ================= HIGHLIGHTS ================= */
+
 function renderHighlights(){
 
   const section =
-    document.getElementById("highlightsSection");
+    document.getElementById(
+      "highlightsSection"
+    );
 
-  const grid =
-    document.getElementById("highlightGrid");
+  const track =
+    document.getElementById(
+      "highlightTrack"
+    );
+
+  const dots =
+    document.getElementById(
+      "highlightDots"
+    );
 
 
-  const highlightedProducts =
+  highlightProducts =
     products.filter(product =>
       isHighlightActive(product)
     );
 
 
-  if(!highlightedProducts.length){
+  highlightIndex = 0;
+
+
+  clearInterval(highlightTimer);
+
+
+  if(!highlightProducts.length){
 
     section.style.display = "none";
 
-    grid.innerHTML = "";
+    track.innerHTML = "";
+
+    dots.innerHTML = "";
 
     return;
   }
@@ -938,22 +1041,337 @@ function renderHighlights(){
 
   section.style.display = "block";
 
-  grid.innerHTML = "";
+
+  track.innerHTML = "";
 
 
-  highlightedProducts.forEach(product => {
+  highlightProducts.forEach(
+    product => {
 
-    const card =
-      createProductCard(
-        product,
-        true
-      );
+      const slide =
+        document.createElement("div");
 
-    grid.appendChild(card);
+      slide.className =
+        "carousel-slide";
 
-  });
+
+      const card =
+        createProductCard(
+          product,
+          true
+        );
+
+
+      slide.appendChild(card);
+
+      track.appendChild(slide);
+
+    }
+  );
+
+
+  renderHighlightDots();
+
+  updateHighlightPosition();
+
+  setupHighlightAutoPlay();
 
 }
+
+
+/* ================= DOTS ================= */
+
+function renderHighlightDots(){
+
+  const dots =
+    document.getElementById(
+      "highlightDots"
+    );
+
+
+  dots.innerHTML = "";
+
+
+  const total =
+    getMaxHighlightIndex() + 1;
+
+
+  if(total <= 1){
+    return;
+  }
+
+
+  for(
+    let i = 0;
+    i < total;
+    i++
+  ){
+
+    const dot =
+      document.createElement("button");
+
+    dot.className =
+      "carousel-dot" +
+      (i === 0
+        ? " active"
+        : "");
+
+
+    dot.addEventListener(
+      "click",
+      function(){
+
+        highlightIndex = i;
+
+        updateHighlightPosition();
+
+        restartHighlightTimer();
+
+      }
+    );
+
+
+    dots.appendChild(dot);
+
+  }
+
+}
+
+
+/* ================= VISIBLE COUNT ================= */
+
+function getVisibleCount(){
+
+  if(window.innerWidth <= 760){
+    return 1;
+  }
+
+  if(window.innerWidth <= 1050){
+    return 2;
+  }
+
+  return 4;
+
+}
+
+
+/* ================= MAX INDEX ================= */
+
+function getMaxHighlightIndex(){
+
+  return Math.max(
+    0,
+    highlightProducts.length -
+    getVisibleCount()
+  );
+
+}
+
+
+/* ================= MOVE ================= */
+
+function updateHighlightPosition(){
+
+  const track =
+    document.getElementById(
+      "highlightTrack"
+    );
+
+
+  const slides =
+    track.querySelectorAll(
+      ".carousel-slide"
+    );
+
+
+  if(!slides.length){
+    return;
+  }
+
+
+  const firstSlide =
+    slides[0];
+
+
+  const slideWidth =
+    firstSlide.getBoundingClientRect().width;
+
+
+  const gap =
+    parseFloat(
+      getComputedStyle(track).gap
+    ) || 0;
+
+
+  const offset =
+    highlightIndex *
+    (slideWidth + gap);
+
+
+  track.style.transform =
+    `translateX(-${offset}px)`;
+
+
+  document
+    .querySelectorAll(".carousel-dot")
+    .forEach(
+      (dot,index) => {
+
+        dot.classList.toggle(
+          "active",
+          index === highlightIndex
+        );
+
+      }
+    );
+
+}
+
+
+/* ================= NEXT ================= */
+
+function nextHighlight(){
+
+  const maxIndex =
+    getMaxHighlightIndex();
+
+
+  if(maxIndex <= 0){
+    return;
+  }
+
+
+  if(
+    highlightIndex >= maxIndex
+  ){
+
+    highlightIndex = 0;
+
+  }else{
+
+    highlightIndex++;
+
+  }
+
+
+  updateHighlightPosition();
+
+}
+
+
+/* ================= PREVIOUS ================= */
+
+function previousHighlight(){
+
+  const maxIndex =
+    getMaxHighlightIndex();
+
+
+  if(maxIndex <= 0){
+    return;
+  }
+
+
+  if(highlightIndex <= 0){
+
+    highlightIndex = maxIndex;
+
+  }else{
+
+    highlightIndex--;
+
+  }
+
+
+  updateHighlightPosition();
+
+}
+
+
+/* ================= AUTO PLAY ================= */
+
+function setupHighlightAutoPlay(){
+
+  clearInterval(highlightTimer);
+
+
+  if(
+    highlightProducts.length <=
+    getVisibleCount()
+  ){
+
+    return;
+  }
+
+
+  highlightTimer =
+    setInterval(
+      nextHighlight,
+      4000
+    );
+
+}
+
+
+function restartHighlightTimer(){
+
+  setupHighlightAutoPlay();
+
+}
+
+
+/* ================= ARROWS ================= */
+
+document
+  .getElementById(
+    "prevHighlight"
+  )
+  .addEventListener(
+    "click",
+    function(){
+
+      previousHighlight();
+
+      restartHighlightTimer();
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "nextHighlight"
+  )
+  .addEventListener(
+    "click",
+    function(){
+
+      nextHighlight();
+
+      restartHighlightTimer();
+
+    }
+  );
+
+
+/* ================= RESIZE ================= */
+
+window.addEventListener(
+  "resize",
+  function(){
+
+    highlightIndex =
+      Math.min(
+        highlightIndex,
+        getMaxHighlightIndex()
+      );
+
+    renderHighlightDots();
+
+    updateHighlightPosition();
+
+  }
+);
 
 
 /* ================= CATEGORIES ================= */
@@ -961,13 +1379,17 @@ function renderHighlights(){
 function createCategoryButtons(){
 
   const categoryBar =
-    document.getElementById("categoryBar");
+    document.getElementById(
+      "categoryBar"
+    );
 
 
   const categories = [
     ...new Set(
       products
-        .map(product => product.category)
+        .map(product =>
+          product.category
+        )
         .filter(Boolean)
     )
   ];
@@ -983,52 +1405,74 @@ function createCategoryButtons(){
   `;
 
 
-  categories.forEach(category => {
+  categories.forEach(
+    category => {
 
-    const button =
-      document.createElement("button");
+      const button =
+        document.createElement(
+          "button"
+        );
 
-    button.className =
-      "category-btn";
 
-    button.dataset.category =
-      category;
+      button.className =
+        "category-btn";
 
-    button.textContent =
-      category;
 
-    categoryBar.appendChild(button);
+      button.dataset.category =
+        category;
 
-  });
+
+      button.textContent =
+        category;
+
+
+      categoryBar.appendChild(
+        button
+      );
+
+    }
+  );
 
 
   document
-    .querySelectorAll(".category-btn")
-    .forEach(button => {
+    .querySelectorAll(
+      ".category-btn"
+    )
+    .forEach(
+      button => {
 
-      button.addEventListener(
-        "click",
-        function(){
+        button.addEventListener(
+          "click",
+          function(){
 
-          currentCategory =
-            this.dataset.category;
+            currentCategory =
+              this.dataset.category;
 
 
-          document
-            .querySelectorAll(".category-btn")
-            .forEach(btn =>
-              btn.classList.remove("active")
+            document
+              .querySelectorAll(
+                ".category-btn"
+              )
+              .forEach(
+                btn =>
+                  btn.classList.remove(
+                    "active"
+                  )
+              );
+
+
+            this.classList.add(
+              "active"
             );
 
 
-          this.classList.add("active");
+            renderProducts();
 
-          renderProducts();
+          }
+        );
 
-        }
-      );
-
-    });
+      }
+    );
 
 }
 
@@ -1036,7 +1480,9 @@ function createCategoryButtons(){
 /* ================= SEARCH ================= */
 
 document
-  .getElementById("searchInput")
+  .getElementById(
+    "searchInput"
+  )
   .addEventListener(
     "input",
     function(){
@@ -1046,49 +1492,73 @@ document
           .trim()
           .toLowerCase();
 
+
       renderProducts();
 
     }
   );
 
 
-/* ================= RENDER PRODUCTS ================= */
+/* ================= PRODUCTS ================= */
 
 function renderProducts(){
 
   const grid =
-    document.getElementById("productGrid");
+    document.getElementById(
+      "productGrid"
+    );
 
 
   let filtered =
-    products.filter(product => {
+    products.filter(
+      product => {
 
-      const categoryMatch =
-        currentCategory === "All" ||
-        product.category === currentCategory;
-
-
-      const searchMatch =
-        !searchTerm ||
-        String(product.name || "")
-          .toLowerCase()
-          .includes(searchTerm) ||
-        String(product.description || "")
-          .toLowerCase()
-          .includes(searchTerm) ||
-        String(product.category || "")
-          .toLowerCase()
-          .includes(searchTerm);
+        const categoryMatch =
+          currentCategory === "All" ||
+          product.category ===
+            currentCategory;
 
 
-      return categoryMatch && searchMatch;
+        const searchMatch =
+          !searchTerm ||
+          String(
+            product.name || ""
+          )
+            .toLowerCase()
+            .includes(searchTerm) ||
 
-    });
+          String(
+            product.description || ""
+          )
+            .toLowerCase()
+            .includes(searchTerm) ||
+
+          String(
+            product.category || ""
+          )
+            .toLowerCase()
+            .includes(searchTerm);
 
 
-  document.getElementById("productCount")
+        return (
+          categoryMatch &&
+          searchMatch
+        );
+
+      }
+    );
+
+
+  document
+    .getElementById(
+      "productCount"
+    )
     .textContent =
-      `${filtered.length} product${filtered.length === 1 ? "" : "s"}`;
+      `${filtered.length} product${
+        filtered.length === 1
+          ? ""
+          : "s"
+      }`;
 
 
   if(!filtered.length){
@@ -1096,9 +1566,12 @@ function renderProducts(){
     grid.innerHTML = `
       <div class="empty">
 
-        <strong>No products found</strong>
+        <strong>
+          No products found
+        </strong>
 
-        Try another search or category.
+        Try another search
+        or category.
 
       </div>
     `;
@@ -1111,22 +1584,23 @@ function renderProducts(){
   grid.innerHTML = "";
 
 
-  filtered.forEach(product => {
+  filtered.forEach(
+    product => {
 
-    const card =
-      createProductCard(
-        product,
-        false
+      grid.appendChild(
+        createProductCard(
+          product,
+          false
+        )
       );
 
-    grid.appendChild(card);
-
-  });
+    }
+  );
 
 }
 
 
-/* ================= CREATE PRODUCT CARD ================= */
+/* ================= PRODUCT CARD ================= */
 
 function createProductCard(
   product,
@@ -1134,7 +1608,9 @@ function createProductCard(
 ){
 
   const card =
-    document.createElement("article");
+    document.createElement(
+      "article"
+    );
 
 
   card.className =
@@ -1158,9 +1634,11 @@ function createProductCard(
         loading="lazy"
       >
 
-
       <div class="category-label">
-        ${escapeHtml(product.category || "Other")}
+        ${escapeHtml(
+          product.category ||
+          "Other"
+        )}
       </div>
 
 
@@ -1180,25 +1658,32 @@ function createProductCard(
     <div class="info">
 
       <div class="title">
-        ${escapeHtml(product.name)}
+        ${escapeHtml(
+          product.name
+        )}
       </div>
 
 
       <div class="description">
-        ${escapeHtml(product.description || "")}
+        ${escapeHtml(
+          product.description ||
+          ""
+        )}
       </div>
 
 
       <a
         class="price-btn"
-        href="${escapeAttribute(product.affiliate_url)}"
+        href="${escapeAttribute(
+          product.affiliate_url
+        )}"
         target="_blank"
         rel="nofollow sponsored noopener"
       >
 
         Check Price
 
-        <span class="arrow">
+        <span>
           →
         </span>
 
@@ -1210,7 +1695,9 @@ function createProductCard(
 
 
   const link =
-    card.querySelector(".price-btn");
+    card.querySelector(
+      ".price-btn"
+    );
 
 
   link.addEventListener(
@@ -1240,16 +1727,31 @@ function trackClick(product){
 }
 
 
-/* ================= SECURITY HELPERS ================= */
+/* ================= SECURITY ================= */
 
 function escapeHtml(value){
 
   return String(value)
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
