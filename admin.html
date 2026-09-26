@@ -1125,12 +1125,25 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_97lkGMFrkcsJnM5XLaDJnQ_ohrWhsbe";
 
+/* Create the client safely so one configuration error
+   does not stop the Forgot Password UI from working. */
+let db = null;
 
-const db =
-  window.supabase.createClient(
+if (SUPABASE_PUBLISHABLE_KEY.trim()) {
+  db = window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
   );
+}
+
+function requireSupabase(){
+  if (!db) {
+    throw new Error(
+      "Supabase publishable key is missing. Paste your existing sb_publishable_... key."
+    );
+  }
+  return db;
+}
 
 
 /* =====================================================
@@ -1431,7 +1444,7 @@ async function login(){
     const {
       error
     } =
-      await db.auth
+      await requireSupabase().auth
         .signInWithPassword({
 
           email,
@@ -1645,7 +1658,7 @@ async function sendPasswordReset(){
     const {
       error
     } =
-      await db.auth
+      await requireSupabase().auth
         .resetPasswordForEmail(
           email,
           {
@@ -1703,6 +1716,7 @@ async function sendPasswordReset(){
    PASSWORD RECOVERY EVENT
 ===================================================== */
 
+if (db) {
 db.auth.onAuthStateChange(
   (event, session) => {
 
@@ -1742,6 +1756,7 @@ db.auth.onAuthStateChange(
 
   }
 );
+}
 
 
 /* =====================================================
@@ -1856,7 +1871,7 @@ async function updatePassword(){
     const {
       error
     } =
-      await db.auth
+      await requireSupabase().auth
         .updateUser({
 
           password
@@ -1887,7 +1902,7 @@ async function updatePassword(){
     setTimeout(
       async () => {
 
-        await db.auth.signOut();
+        await requireSupabase().auth.signOut();
 
         window.location.href =
           window.location.pathname;
@@ -1957,7 +1972,7 @@ async function checkSession(){
       session
     }
   } =
-    await db.auth
+    await requireSupabase().auth
       .getSession();
 
 
@@ -2071,7 +2086,7 @@ logoutBtn.addEventListener(
   "click",
   async () => {
 
-    await db.auth.signOut();
+    await requireSupabase().auth.signOut();
 
     showLogin();
 
