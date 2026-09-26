@@ -458,7 +458,49 @@ textarea{
 
 </section>
 
+<!-- PASSWORD RESET -->
 
+<section
+  id="resetSection"
+  class="login-box"
+  style="display:none;"
+>
+
+  <h1>Set New Password</h1>
+
+  <p style="color:#777;">
+    Enter your new Admin Panel password.
+  </p>
+
+  <div class="form-group">
+    <label>New Password</label>
+    <input
+      id="newPassword"
+      type="password"
+      placeholder="Enter new password"
+    >
+  </div>
+
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input
+      id="confirmPassword"
+      type="password"
+      placeholder="Confirm new password"
+    >
+  </div>
+
+  <button
+    id="updatePasswordBtn"
+    class="primary-btn"
+  >
+    Update Password
+  </button>
+
+  <div id="resetMessage"></div>
+
+</section>
+  
 <!-- DASHBOARD -->
 
 <main id="dashboard" class="dashboard">
