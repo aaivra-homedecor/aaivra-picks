@@ -3,24 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Aaivra Picks</title>
   <meta name="description" content="Curated products for everyday living.">
+
   <style>
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family:Arial,Helvetica,sans-serif;
       background:#f7f7f5;
       color:#171717;
     }
-    a{text-decoration:none;color:inherit}
+
+    a{
+      text-decoration:none;
+      color:inherit;
+    }
+
     .header{
       background:#fff;
       padding:28px 6%;
       border-bottom:1px solid #eee;
     }
-    .brand{font-size:28px;font-weight:800}
-    .tagline{color:#777;margin-top:5px;font-size:14px}
+
+    .brand{
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .tagline{
+      color:#777;
+      margin-top:5px;
+      font-size:14px;
+    }
 
     .nav{
       background:#fff;
@@ -30,6 +47,7 @@
       gap:10px;
       flex-wrap:wrap;
     }
+
     .nav button{
       border:0;
       background:#f1f1ef;
@@ -38,52 +56,77 @@
       cursor:pointer;
       font-weight:600;
     }
-    .nav button.active{background:#171717;color:#fff}
+
+    .nav button.active{
+      background:#171717;
+      color:#fff;
+    }
 
     .container{
       max-width:1200px;
       margin:auto;
       padding:45px 6%;
     }
-    .hero{text-align:center;margin-bottom:40px}
-    .hero h1{font-size:38px;margin:0 0 10px}
-    .hero p{color:#777;margin:0}
+
+    .hero{
+      text-align:center;
+      margin-bottom:40px;
+    }
+
+    .hero h1{
+      font-size:38px;
+      margin:0 0 10px;
+    }
+
+    .hero p{
+      color:#777;
+      margin:0;
+    }
 
     .grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:24px;
     }
+
     .card{
       background:#fff;
       border:1px solid #e8e8e8;
       border-radius:14px;
       overflow:hidden;
     }
+
     .card img{
       width:100%;
       aspect-ratio:1/1;
       object-fit:cover;
       display:block;
     }
-    .info{padding:18px}
+
+    .info{
+      padding:18px;
+    }
+
     .category{
       font-size:11px;
       text-transform:uppercase;
       color:#888;
       font-weight:700;
     }
+
     .title{
       font-size:18px;
       font-weight:700;
       margin:7px 0;
     }
+
     .description{
       color:#666;
       font-size:14px;
       line-height:1.5;
       margin-bottom:16px;
     }
+
     .price-btn{
       display:block;
       text-align:center;
@@ -93,11 +136,19 @@
       border-radius:8px;
       font-weight:700;
     }
+
     .empty{
       text-align:center;
       color:#888;
       padding:50px;
     }
+
+    .loading{
+      text-align:center;
+      color:#888;
+      padding:50px;
+    }
+
     footer{
       text-align:center;
       padding:30px;
@@ -108,12 +159,23 @@
     }
 
     @media(max-width:800px){
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .hero h1{font-size:30px}
+      .grid{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .hero h1{
+        font-size:30px;
+      }
     }
+
     @media(max-width:550px){
-      .grid{grid-template-columns:1fr}
-      .container{padding:30px 5%}
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      .container{
+        padding:30px 5%;
+      }
     }
   </style>
 </head>
@@ -139,7 +201,9 @@
     <p>Discover useful and aesthetic products across everyday categories.</p>
   </section>
 
-  <section id="productGrid" class="grid"></section>
+  <section id="productGrid" class="grid">
+    <div class="loading">Loading products...</div>
+  </section>
 
 </main>
 
@@ -147,90 +211,145 @@
   © 2026 Aaivra Picks
 </footer>
 
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 
-const products = [
-  {
-    name: "Aesthetic Floating Wall Shelves",
-    category: "Home Decor",
-    description: "Minimal wooden shelves for living room, bedroom or workspace.",
-    image: "https://placehold.co/800x800?text=Wall+Shelves",
-    link: "https://example.com/"
-  },
-  {
-    name: "Modern Table Lamp",
-    category: "Home Decor",
-    description: "Clean, warm-light lamp for a cozy desk or bedside setup.",
-    image: "https://placehold.co/800x800?text=Table+Lamp",
-    link: "https://example.com/"
-  },
-  {
-    name: "Compact Spice Organizer",
-    category: "Kitchen",
-    description: "Space-saving organizer for neatly arranging everyday spices.",
-    image: "https://placehold.co/800x800?text=Spice+Organizer",
-    link: "https://example.com/"
-  },
-  {
-    name: "Wireless Charging Stand",
-    category: "Tech Gadgets",
-    description: "Compact charging stand for a clean and convenient desk setup.",
-    image: "https://placehold.co/800x800?text=Charging+Stand",
-    link: "https://example.com/"
-  },
-  {
-    name: "LED Desk Light",
-    category: "Tech Gadgets",
-    description: "Adjustable LED light designed for work, study and desk setups.",
-    image: "https://placehold.co/800x800?text=LED+Desk+Light",
-    link: "https://example.com/"
-  }
-];
+const SUPABASE_URL = "https://tqdafchoiahfwofkgmwx.supabase.co";
 
-function showProducts(category="All"){
-  const grid=document.getElementById("productGrid");
+/*
+  IMPORTANT:
+  Paste your copied sb_publishable_... key below.
+  DO NOT use the sb_secret_... key.
+*/
+const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE";
 
-  const filtered = category==="All"
-    ? products
-    : products.filter(p=>p.category===category);
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
 
-  if(!filtered.length){
-    grid.innerHTML='<div class="empty">No products found.</div>';
+let products = [];
+
+
+/* Load products from Supabase */
+async function loadProducts(){
+
+  const grid = document.getElementById("productGrid");
+
+  grid.innerHTML = '<div class="loading">Loading products...</div>';
+
+  const { data, error } = await db
+    .from("products")
+    .select("*")
+    .eq("active", true)
+    .order("id", { ascending: true });
+
+  if(error){
+
+    console.error("Supabase Error:", error);
+
+    grid.innerHTML = `
+      <div class="empty">
+        Unable to load products.
+      </div>
+    `;
+
     return;
   }
 
-  grid.innerHTML=filtered.map(product=>`
+  products = data || [];
+
+  showProducts("All");
+}
+
+
+/* Display products */
+function showProducts(category="All"){
+
+  const grid = document.getElementById("productGrid");
+
+  const filtered =
+    category === "All"
+      ? products
+      : products.filter(
+          product => product.category === category
+        );
+
+  if(!filtered.length){
+
+    grid.innerHTML =
+      '<div class="empty">No products found.</div>';
+
+    return;
+  }
+
+  grid.innerHTML = filtered.map(product => `
+
     <article class="card">
-      <img src="${product.image}" alt="${product.name}">
+
+      <img
+        src="${product.image_url || 'https://placehold.co/800x800?text=Aaivra+Picks'}"
+        alt="${product.name}"
+        loading="lazy"
+      >
+
       <div class="info">
-        <div class="category">${product.category}</div>
-        <div class="title">${product.name}</div>
-        <div class="description">${product.description}</div>
-        <a class="price-btn"
-           href="${product.link}"
-           target="_blank"
-           rel="nofollow sponsored noopener"
-           onclick="trackClick('${product.name}')">
-           Check Price
+
+        <div class="category">
+          ${product.category}
+        </div>
+
+        <div class="title">
+          ${product.name}
+        </div>
+
+        <div class="description">
+          ${product.description || ""}
+        </div>
+
+        <a
+          class="price-btn"
+          href="${product.affiliate_url}"
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          onclick="trackClick('${product.name.replace(/'/g, "\\'")}')"
+        >
+          Check Price
         </a>
+
       </div>
+
     </article>
+
   `).join("");
 }
 
-function filterProducts(category,button){
-  document.querySelectorAll(".nav button")
-    .forEach(btn=>btn.classList.remove("active"));
+
+/* Category filter */
+function filterProducts(category, button){
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(btn => btn.classList.remove("active"));
 
   button.classList.add("active");
+
   showProducts(category);
 }
 
+
+/* Temporary click tracking */
 function trackClick(productName){
-  console.log("Product click:",productName);
+
+  console.log("Product click:", productName);
+
 }
 
-showProducts();
+
+/* Start */
+loadProducts();
 
 </script>
 
