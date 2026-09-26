@@ -50,7 +50,6 @@ button{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:15px;
   position:sticky;
   top:0;
   z-index:20;
@@ -136,6 +135,11 @@ textarea{
   font-weight:700;
 }
 
+.primary-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed;
+}
+
 .secondary-btn{
   background:#f1eee7;
   color:#333;
@@ -152,16 +156,46 @@ textarea{
   border-radius:7px;
 }
 
-.success-btn{
-  background:#edf8f1;
-  color:var(--success);
-  border:1px solid #cfe8d8;
-  padding:8px 11px;
-  border-radius:7px;
-}
-
 .dashboard{
   display:none;
+}
+
+.forgot-btn{
+  width:100%;
+  margin-top:10px;
+  background:none;
+  border:0;
+  color:var(--gold);
+  font-weight:700;
+  cursor:pointer;
+  padding:8px;
+}
+
+.forgot-btn:hover{
+  text-decoration:underline;
+}
+
+.back-btn{
+  width:100%;
+  margin-top:10px;
+  background:none;
+  border:0;
+  color:#666;
+  padding:8px;
+}
+
+.message{
+  font-size:13px;
+  margin-top:10px;
+  line-height:1.5;
+}
+
+.error{
+  color:var(--danger);
+}
+
+.success{
+  color:var(--success);
 }
 
 .stats{
@@ -206,6 +240,13 @@ textarea{
 .card h2{
   margin-top:0;
   font-size:19px;
+}
+
+.section-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
 }
 
 .checkbox-row{
@@ -334,26 +375,14 @@ textarea{
   color:var(--muted);
 }
 
-.error{
-  color:var(--danger);
-  font-size:13px;
-  margin-top:10px;
-}
-
-.success{
-  color:var(--success);
-  font-size:13px;
-  margin-top:10px;
-}
-
-.section-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
+hr{
+  border:0;
+  border-top:1px solid #eee;
+  margin:20px 0;
 }
 
 @media(max-width:1100px){
+
   .stats{
     grid-template-columns:repeat(3,1fr);
   }
@@ -368,6 +397,7 @@ textarea{
 }
 
 @media(max-width:700px){
+
   .container{
     padding:14px;
   }
@@ -408,58 +438,146 @@ textarea{
 <body>
 
 <header class="topbar">
-  <div class="brand">Aaivra <span>Picks</span> — Admin</div>
-  <button id="logoutBtn" class="logout-btn" style="display:none;">
+
+  <div class="brand">
+    Aaivra <span>Picks</span> — Admin
+  </div>
+
+  <button
+    id="logoutBtn"
+    class="logout-btn"
+    style="display:none;"
+  >
     Logout
   </button>
+
 </header>
 
 
-<!-- LOGIN -->
+<!-- =====================================================
+     LOGIN
+===================================================== -->
 
-<section id="loginSection" class="login-box">
+<section
+  id="loginSection"
+  class="login-box"
+>
 
   <h1>Admin Login</h1>
+
   <p style="color:#777;">
     Sign in to manage Aaivra Picks products.
   </p>
 
   <div class="form-group">
+
     <label>Email</label>
-    <input id="loginEmail" type="email" placeholder="Admin email">
+
+    <input
+      id="loginEmail"
+      type="email"
+      placeholder="Admin email"
+      autocomplete="email"
+    >
+
   </div>
+
 
   <div class="form-group">
+
     <label>Password</label>
-    <input id="loginPassword" type="password" placeholder="Password">
+
+    <input
+      id="loginPassword"
+      type="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
   </div>
 
-  <button id="loginBtn" class="primary-btn">
-  Login
-</button>
 
-<button
-  id="forgotPasswordBtn"
-  type="button"
-  onclick="forgotPassword()"
-  style="
-    width:100%;
-    margin-top:10px;
-    background:none;
-    border:0;
-    color:#b28a45;
-    font-weight:700;
-    cursor:pointer;
-  "
->
-  Forgot Password?
-</button>
+  <button
+    id="loginBtn"
+    class="primary-btn"
+  >
+    Login
+  </button>
 
-<div id="loginMessage"></div>
+
+  <button
+    id="forgotPasswordBtn"
+    class="forgot-btn"
+    type="button"
+  >
+    Forgot Password?
+  </button>
+
+
+  <div id="loginMessage" class="message"></div>
 
 </section>
 
-<!-- PASSWORD RESET -->
+
+<!-- =====================================================
+     FORGOT PASSWORD EMAIL
+===================================================== -->
+
+<section
+  id="forgotSection"
+  class="login-box"
+  style="display:none;"
+>
+
+  <h1>Forgot Password</h1>
+
+  <p style="color:#777;">
+    Enter your admin email. We will send a password reset link.
+  </p>
+
+
+  <div class="form-group">
+
+    <label>Email</label>
+
+    <input
+      id="resetEmail"
+      type="email"
+      placeholder="Admin email"
+      autocomplete="email"
+    >
+
+  </div>
+
+
+  <button
+    id="sendResetBtn"
+    class="primary-btn"
+  >
+    Send Reset Link
+  </button>
+
+
+  <button
+    id="backToLoginBtn"
+    class="back-btn"
+    type="button"
+  >
+    ← Back to Login
+  </button>
+
+
+  <div
+    id="forgotMessage"
+    class="message"
+  ></div>
+
+</section>
+
+
+<!-- =====================================================
+     SET NEW PASSWORD
+===================================================== -->
 
 <section
   id="resetSection"
@@ -473,23 +591,34 @@ textarea{
     Enter your new Admin Panel password.
   </p>
 
+
   <div class="form-group">
+
     <label>New Password</label>
+
     <input
       id="newPassword"
       type="password"
-      placeholder="Enter new password"
+      placeholder="New password"
+      autocomplete="new-password"
     >
+
   </div>
 
+
   <div class="form-group">
+
     <label>Confirm Password</label>
+
     <input
       id="confirmPassword"
       type="password"
-      placeholder="Confirm new password"
+      placeholder="Confirm password"
+      autocomplete="new-password"
     >
+
   </div>
+
 
   <button
     id="updatePasswordBtn"
@@ -498,151 +627,364 @@ textarea{
     Update Password
   </button>
 
-  <div id="resetMessage"></div>
+
+  <div
+    id="resetMessage"
+    class="message"
+  ></div>
 
 </section>
-  
-<!-- DASHBOARD -->
 
-<main id="dashboard" class="dashboard">
+
+<!-- =====================================================
+     DASHBOARD
+===================================================== -->
+
+<main
+  id="dashboard"
+  class="dashboard"
+>
 
 <div class="container">
 
-  <!-- STATS -->
+
+  <!-- =================================================
+       STATS
+  ================================================== -->
 
   <div class="stats">
 
     <div class="stat">
-      <div class="stat-label">Total Products</div>
-      <div id="totalProducts" class="stat-value">0</div>
+
+      <div class="stat-label">
+        Total Products
+      </div>
+
+      <div
+        id="totalProducts"
+        class="stat-value"
+      >
+        0
+      </div>
+
     </div>
 
-    <div class="stat">
-      <div class="stat-label">Active</div>
-      <div id="activeProducts" class="stat-value">0</div>
-    </div>
 
     <div class="stat">
-      <div class="stat-label">Inactive</div>
-      <div id="inactiveProducts" class="stat-value">0</div>
+
+      <div class="stat-label">
+        Active
+      </div>
+
+      <div
+        id="activeProducts"
+        class="stat-value"
+      >
+        0
+      </div>
+
     </div>
 
-    <div class="stat">
-      <div class="stat-label">Highlighted</div>
-      <div id="highlightProducts" class="stat-value">0</div>
-    </div>
 
     <div class="stat">
-      <div class="stat-label">Categories</div>
-      <div id="categoryCount" class="stat-value">0</div>
+
+      <div class="stat-label">
+        Inactive
+      </div>
+
+      <div
+        id="inactiveProducts"
+        class="stat-value"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-label">
+        Highlighted
+      </div>
+
+      <div
+        id="highlightProducts"
+        class="stat-value"
+      >
+        0
+      </div>
+
+    </div>
+
+
+    <div class="stat">
+
+      <div class="stat-label">
+        Categories
+      </div>
+
+      <div
+        id="categoryCount"
+        class="stat-value"
+      >
+        0
+      </div>
+
     </div>
 
   </div>
 
 
+  <!-- =================================================
+       MAIN GRID
+  ================================================== -->
+
   <div class="grid">
 
-    <!-- PRODUCT FORM -->
+
+    <!-- =================================================
+         ADD / EDIT PRODUCT
+    ================================================== -->
 
     <section class="card">
 
       <div class="section-title">
-        <h2 id="formTitle">Add Product</h2>
-        <button id="cancelEdit" class="secondary-btn" style="display:none;">
+
+        <h2 id="formTitle">
+          Add Product
+        </h2>
+
+        <button
+          id="cancelEdit"
+          class="secondary-btn"
+          style="display:none;"
+        >
           Cancel
         </button>
+
       </div>
 
-      <input type="hidden" id="productId">
+
+      <input
+        type="hidden"
+        id="productId"
+      >
+
 
       <div class="form-group">
-        <label>Product Name *</label>
-        <input id="productName" type="text" placeholder="Product name">
+
+        <label>
+          Product Name *
+        </label>
+
+        <input
+          id="productName"
+          type="text"
+          placeholder="Product name"
+        >
+
       </div>
 
+
       <div class="form-group">
-        <label>Main Category *</label>
+
+        <label>
+          Main Category *
+        </label>
+
         <select id="category">
-          <option value="">Select Category</option>
+
+          <option value="">
+            Select Category
+          </option>
+
         </select>
+
       </div>
 
+
       <div class="form-group">
-        <label>Subcategory *</label>
+
+        <label>
+          Subcategory *
+        </label>
+
         <select id="subcategory">
-          <option value="">Select Subcategory</option>
+
+          <option value="">
+            Select Subcategory
+          </option>
+
         </select>
+
       </div>
 
-      <div class="form-group">
-        <label>Short Description</label>
-        <textarea id="description" placeholder="Short product description"></textarea>
-      </div>
 
       <div class="form-group">
-        <label>Image URL *</label>
-        <input id="imageUrl" type="url" placeholder="https://...">
-        <img id="imagePreview" class="preview">
+
+        <label>
+          Short Description
+        </label>
+
+        <textarea
+          id="description"
+          placeholder="Short product description"
+        ></textarea>
+
       </div>
 
+
       <div class="form-group">
-        <label>Affiliate URL *</label>
-        <input id="affiliateUrl" type="url" placeholder="https://...">
+
+        <label>
+          Image URL *
+        </label>
+
+        <input
+          id="imageUrl"
+          type="url"
+          placeholder="https://..."
+        >
+
+        <img
+          id="imagePreview"
+          class="preview"
+          alt="Product Preview"
+        >
+
       </div>
+
+
+      <div class="form-group">
+
+        <label>
+          Affiliate URL *
+        </label>
+
+        <input
+          id="affiliateUrl"
+          type="url"
+          placeholder="https://..."
+        >
+
+      </div>
+
 
       <div class="checkbox-row">
-        <input id="active" type="checkbox" checked>
-        <label for="active" style="margin:0;">
+
+        <input
+          id="active"
+          type="checkbox"
+          checked
+        >
+
+        <label
+          for="active"
+          style="margin:0;"
+        >
           Product Active
         </label>
+
       </div>
 
-      <hr style="border:0;border-top:1px solid #eee;margin:20px 0;">
+
+      <hr>
+
 
       <div class="checkbox-row">
-        <input id="highlighted" type="checkbox">
-        <label for="highlighted" style="margin:0;">
+
+        <input
+          id="highlighted"
+          type="checkbox"
+        >
+
+        <label
+          for="highlighted"
+          style="margin:0;"
+        >
           Show in Highlights
         </label>
+
       </div>
 
-      <div id="highlightDates" style="display:none;">
+
+      <div
+        id="highlightDates"
+        style="display:none;"
+      >
 
         <div class="date-grid">
 
           <div class="form-group">
-            <label>Highlight Start Date</label>
-            <input id="highlightStart" type="date">
+
+            <label>
+              Highlight Start Date
+            </label>
+
+            <input
+              id="highlightStart"
+              type="date"
+            >
+
           </div>
 
+
           <div class="form-group">
-            <label>Highlight End Date</label>
-            <input id="highlightEnd" type="date">
+
+            <label>
+              Highlight End Date
+            </label>
+
+            <input
+              id="highlightEnd"
+              type="date"
+            >
+
           </div>
 
         </div>
 
       </div>
 
-      <button id="saveBtn" class="primary-btn">
+
+      <button
+        id="saveBtn"
+        class="primary-btn"
+      >
         Add Product
       </button>
 
-      <div id="formMessage"></div>
+
+      <div
+        id="formMessage"
+        class="message"
+      ></div>
 
     </section>
 
 
-    <!-- PRODUCT MANAGEMENT -->
+    <!-- =================================================
+         PRODUCT MANAGEMENT
+    ================================================== -->
 
     <section class="card">
 
       <div class="section-title">
-        <h2>Product Management</h2>
-        <button id="refreshBtn" class="secondary-btn">
+
+        <h2>
+          Product Management
+        </h2>
+
+        <button
+          id="refreshBtn"
+          class="secondary-btn"
+        >
           Refresh
         </button>
+
       </div>
+
 
       <div class="toolbar">
 
@@ -652,44 +994,101 @@ textarea{
           placeholder="🔎 Search products..."
         >
 
+
         <select id="filterCategory">
-          <option value="">All Categories</option>
+
+          <option value="">
+            All Categories
+          </option>
+
         </select>
+
 
         <select id="filterSubcategory">
-          <option value="">All Subcategories</option>
+
+          <option value="">
+            All Subcategories
+          </option>
+
         </select>
+
 
         <select id="filterStatus">
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
+
+          <option value="">
+            All Status
+          </option>
+
+          <option value="active">
+            Active
+          </option>
+
+          <option value="inactive">
+            Inactive
+          </option>
+
         </select>
+
 
         <select id="sortProducts">
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-          <option value="az">A–Z</option>
-          <option value="za">Z–A</option>
+
+          <option value="newest">
+            Newest
+          </option>
+
+          <option value="oldest">
+            Oldest
+          </option>
+
+          <option value="az">
+            A–Z
+          </option>
+
+          <option value="za">
+            Z–A
+          </option>
+
         </select>
 
       </div>
 
-      <div class="toolbar" style="grid-template-columns:1fr;">
+
+      <div
+        class="toolbar"
+        style="grid-template-columns:1fr;"
+      >
 
         <select id="filterHighlight">
-          <option value="">All Products</option>
-          <option value="highlight">Highlighted Only</option>
-          <option value="normal">Normal Products</option>
+
+          <option value="">
+            All Products
+          </option>
+
+          <option value="highlight">
+            Highlighted Only
+          </option>
+
+          <option value="normal">
+            Normal Products
+          </option>
+
         </select>
 
       </div>
 
-      <div id="productCount" class="product-count">
+
+      <div
+        id="productCount"
+        class="product-count"
+      >
         0 products
       </div>
 
-      <div id="productList" class="product-list"></div>
+
+      <div
+        id="productList"
+        class="product-list"
+      ></div>
 
     </section>
 
@@ -702,31 +1101,41 @@ textarea{
 
 <script>
 
+/* =====================================================
+   SUPABASE
+===================================================== */
+
 const SUPABASE_URL =
   "https://tqdafchoiahfwofkgmwx.supabase.co";
 
+
 /*
   IMPORTANT:
-  Yahan apni Supabase PUBLISHABLE KEY paste karo.
 
-  sb_publishable_... key use karo.
-  NEVER use sb_secret_... key.
+  YAHAN APNI EXISTING SUPABASE
+  PUBLISHABLE KEY PASTE KARO.
+
+  Example:
+  sb_publishable_XXXXXXXX
+
+  NEVER use:
+  sb_secret_XXXXXXXX
 */
 
-const SUPABASE_KEY =
+const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_97lkGMFrkcsJnM5XLaDJnQ_ohrWhsbe";
 
 
-const { createClient } =
-  supabase.createClient(
+const db =
+  window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_KEY
+    SUPABASE_PUBLISHABLE_KEY
   );
 
 
-/* =========================
+/* =====================================================
    CATEGORY STRUCTURE
-========================= */
+===================================================== */
 
 const CATEGORY_DATA = {
 
@@ -808,58 +1217,95 @@ const CATEGORY_DATA = {
 };
 
 
-/* =========================
+/* =====================================================
    STATE
-========================= */
+===================================================== */
 
 let products = [];
+
 let editingId = null;
 
+let recoveryMode = false;
 
-/* =========================
+
+/* =====================================================
    DOM
-========================= */
+===================================================== */
 
 const loginSection =
-  document.getElementById("loginSection");
+  document.getElementById(
+    "loginSection"
+  );
+
+const forgotSection =
+  document.getElementById(
+    "forgotSection"
+  );
+
+const resetSection =
+  document.getElementById(
+    "resetSection"
+  );
 
 const dashboard =
-  document.getElementById("dashboard");
+  document.getElementById(
+    "dashboard"
+  );
 
 const logoutBtn =
-  document.getElementById("logoutBtn");
+  document.getElementById(
+    "logoutBtn"
+  );
 
 const loginBtn =
-  document.getElementById("loginBtn");
+  document.getElementById(
+    "loginBtn"
+  );
 
 const loginMessage =
-  document.getElementById("loginMessage");
+  document.getElementById(
+    "loginMessage"
+  );
 
 
-/* =========================
+/* =====================================================
    CATEGORY OPTIONS
-========================= */
+===================================================== */
 
 function populateMainCategories(){
 
   const category =
-    document.getElementById("category");
+    document.getElementById(
+      "category"
+    );
 
   const filterCategory =
-    document.getElementById("filterCategory");
+    document.getElementById(
+      "filterCategory"
+    );
+
 
   category.innerHTML =
-    `<option value="">Select Category</option>`;
+    `<option value="">
+      Select Category
+    </option>`;
+
 
   filterCategory.innerHTML =
-    `<option value="">All Categories</option>`;
+    `<option value="">
+      All Categories
+    </option>`;
 
-  Object.keys(CATEGORY_DATA).forEach(cat => {
+
+  Object.keys(
+    CATEGORY_DATA
+  ).forEach(cat => {
 
     category.innerHTML +=
       `<option value="${escapeHtml(cat)}">
         ${escapeHtml(cat)}
       </option>`;
+
 
     filterCategory.innerHTML +=
       `<option value="${escapeHtml(cat)}">
@@ -877,22 +1323,36 @@ function populateSubcategories(
 ){
 
   const select =
-    document.getElementById(targetId);
+    document.getElementById(
+      targetId
+    );
+
 
   const list =
-    CATEGORY_DATA[categoryValue] || [];
+    CATEGORY_DATA[
+      categoryValue
+    ] || [];
 
-  if(targetId === "subcategory"){
+
+  if(
+    targetId ===
+    "subcategory"
+  ){
 
     select.innerHTML =
-      `<option value="">Select Subcategory</option>`;
+      `<option value="">
+        Select Subcategory
+      </option>`;
 
   }else{
 
     select.innerHTML =
-      `<option value="">All Subcategories</option>`;
+      `<option value="">
+        All Subcategories
+      </option>`;
 
   }
+
 
   list.forEach(sub => {
 
@@ -906,68 +1366,607 @@ function populateSubcategories(
 }
 
 
-/* =========================
-   AUTH
-========================= */
+/* =====================================================
+   LOGIN
+===================================================== */
 
-loginBtn.addEventListener("click", login);
+loginBtn.addEventListener(
+  "click",
+  login
+);
+
 
 async function login(){
 
   const email =
-    document.getElementById("loginEmail").value.trim();
+    document
+      .getElementById(
+        "loginEmail"
+      )
+      .value
+      .trim();
+
 
   const password =
-    document.getElementById("loginPassword").value;
+    document
+      .getElementById(
+        "loginPassword"
+      )
+      .value;
 
-  loginMessage.className = "";
 
-  if(!email || !password){
+  loginMessage.className =
+    "message";
 
-    loginMessage.className = "error";
+
+  loginMessage.textContent =
+    "";
+
+
+  if(
+    !email ||
+    !password
+  ){
+
+    loginMessage.className =
+      "message error";
+
     loginMessage.textContent =
       "Email and password required.";
 
     return;
+
   }
 
-  loginBtn.disabled = true;
-  loginBtn.textContent = "Logging in...";
 
-  const { error } =
-    await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
+  loginBtn.disabled =
+    true;
 
-  loginBtn.disabled = false;
-  loginBtn.textContent = "Login";
+  loginBtn.textContent =
+    "Logging in...";
 
-  if(error){
 
-    loginMessage.className = "error";
+  try{
+
+    const {
+      error
+    } =
+      await db.auth
+        .signInWithPassword({
+
+          email,
+          password
+
+        });
+
+
+    if(error){
+
+      loginMessage.className =
+        "message error";
+
+      loginMessage.textContent =
+        error.message;
+
+      return;
+
+    }
+
+
+    showDashboard();
+
+  }
+
+  catch(error){
+
+    loginMessage.className =
+      "message error";
+
     loginMessage.textContent =
-      error.message;
+      error.message ||
+      "Login failed.";
 
-    return;
   }
 
-  loginMessage.className = "success";
-  loginMessage.textContent =
-    "Login successful.";
+  finally{
 
-  showDashboard();
+    loginBtn.disabled =
+      false;
+
+    loginBtn.textContent =
+      "Login";
+
+  }
 
 }
 
 
+/* =====================================================
+   FORGOT PASSWORD
+===================================================== */
+
+document
+  .getElementById(
+    "forgotPasswordBtn"
+  )
+  .addEventListener(
+    "click",
+    openForgotPassword
+  );
+
+
+function openForgotPassword(){
+
+  const currentEmail =
+    document
+      .getElementById(
+        "loginEmail"
+      )
+      .value
+      .trim();
+
+
+  document
+    .getElementById(
+      "resetEmail"
+    )
+    .value =
+    currentEmail;
+
+
+  loginSection.style.display =
+    "none";
+
+  resetSection.style.display =
+    "none";
+
+  dashboard.style.display =
+    "none";
+
+  forgotSection.style.display =
+    "block";
+
+
+  document
+    .getElementById(
+      "forgotMessage"
+    )
+    .textContent =
+    "";
+
+}
+
+
+/* =====================================================
+   BACK TO LOGIN
+===================================================== */
+
+document
+  .getElementById(
+    "backToLoginBtn"
+  )
+  .addEventListener(
+    "click",
+    () => {
+
+      forgotSection.style.display =
+        "none";
+
+      resetSection.style.display =
+        "none";
+
+      loginSection.style.display =
+        "block";
+
+      document
+        .getElementById(
+          "forgotMessage"
+        )
+        .textContent =
+        "";
+
+    }
+  );
+
+
+/* =====================================================
+   SEND PASSWORD RESET EMAIL
+===================================================== */
+
+document
+  .getElementById(
+    "sendResetBtn"
+  )
+  .addEventListener(
+    "click",
+    sendPasswordReset
+  );
+
+
+async function sendPasswordReset(){
+
+  const email =
+    document
+      .getElementById(
+        "resetEmail"
+      )
+      .value
+      .trim();
+
+
+  const message =
+    document
+      .getElementById(
+        "forgotMessage"
+      );
+
+
+  message.className =
+    "message";
+
+
+  message.textContent =
+    "";
+
+
+  if(!email){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      "Please enter your email.";
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "sendResetBtn"
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Sending...";
+
+
+  try{
+
+    const redirectTo =
+      window.location.origin +
+      window.location.pathname;
+
+
+    const {
+      error
+    } =
+      await db.auth
+        .resetPasswordForEmail(
+          email,
+          {
+            redirectTo
+          }
+        );
+
+
+    if(error){
+
+      message.className =
+        "message error";
+
+      message.textContent =
+        error.message;
+
+      return;
+
+    }
+
+
+    message.className =
+      "message success";
+
+    message.textContent =
+      "Reset link sent. Check your Gmail Inbox and Spam folder.";
+
+  }
+
+  catch(error){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      error.message ||
+      "Unable to send reset email.";
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Send Reset Link";
+
+  }
+
+}
+
+
+/* =====================================================
+   PASSWORD RECOVERY EVENT
+===================================================== */
+
+db.auth.onAuthStateChange(
+  (event, session) => {
+
+    if(
+      event ===
+      "PASSWORD_RECOVERY"
+    ){
+
+      recoveryMode =
+        true;
+
+
+      loginSection.style.display =
+        "none";
+
+      forgotSection.style.display =
+        "none";
+
+      dashboard.style.display =
+        "none";
+
+      logoutBtn.style.display =
+        "none";
+
+      resetSection.style.display =
+        "block";
+
+
+      document
+        .getElementById(
+          "resetMessage"
+        )
+        .textContent =
+        "";
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   UPDATE PASSWORD
+===================================================== */
+
+document
+  .getElementById(
+    "updatePasswordBtn"
+  )
+  .addEventListener(
+    "click",
+    updatePassword
+  );
+
+
+async function updatePassword(){
+
+  const password =
+    document
+      .getElementById(
+        "newPassword"
+      )
+      .value;
+
+
+  const confirmPassword =
+    document
+      .getElementById(
+        "confirmPassword"
+      )
+      .value;
+
+
+  const message =
+    document
+      .getElementById(
+        "resetMessage"
+      );
+
+
+  message.className =
+    "message";
+
+
+  message.textContent =
+    "";
+
+
+  if(
+    !password ||
+    !confirmPassword
+  ){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      "Please enter both passwords.";
+
+    return;
+
+  }
+
+
+  if(
+    password.length < 6
+  ){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      "Password must be at least 6 characters.";
+
+    return;
+
+  }
+
+
+  if(
+    password !==
+    confirmPassword
+  ){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      "Passwords do not match.";
+
+    return;
+
+  }
+
+
+  const button =
+    document.getElementById(
+      "updatePasswordBtn"
+    );
+
+
+  button.disabled =
+    true;
+
+  button.textContent =
+    "Updating...";
+
+
+  try{
+
+    const {
+      error
+    } =
+      await db.auth
+        .updateUser({
+
+          password
+
+        });
+
+
+    if(error){
+
+      message.className =
+        "message error";
+
+      message.textContent =
+        error.message;
+
+      return;
+
+    }
+
+
+    message.className =
+      "message success";
+
+    message.textContent =
+      "Password updated successfully. Login again.";
+
+
+    setTimeout(
+      async () => {
+
+        await db.auth.signOut();
+
+        window.location.href =
+          window.location.pathname;
+
+      },
+      1500
+    );
+
+  }
+
+  catch(error){
+
+    message.className =
+      "message error";
+
+    message.textContent =
+      error.message ||
+      "Password update failed.";
+
+  }
+
+  finally{
+
+    button.disabled =
+      false;
+
+    button.textContent =
+      "Update Password";
+
+  }
+
+}
+
+
+/* =====================================================
+   SESSION
+===================================================== */
+
 async function checkSession(){
+
+  /*
+    Supabase recovery links normally contain
+    type=recovery in the URL hash.
+  */
+
+  const isRecoveryUrl =
+    window.location.hash
+      .includes(
+        "type=recovery"
+      );
+
+
+  if(isRecoveryUrl){
+
+    recoveryMode =
+      true;
+
+    showPasswordReset();
+
+    return;
+
+  }
+
 
   const {
     data:{
       session
     }
-  } = await supabase.auth.getSession();
+  } =
+    await db.auth
+      .getSession();
+
+
+  if(recoveryMode){
+
+    return;
+
+  }
+
 
   if(session){
 
@@ -982,64 +1981,147 @@ async function checkSession(){
 }
 
 
-function showLogin(){
+/* =====================================================
+   SHOW PASSWORD RESET
+===================================================== */
 
-  loginSection.style.display = "block";
-  dashboard.style.display = "none";
-  logoutBtn.style.display = "none";
+function showPasswordReset(){
+
+  loginSection.style.display =
+    "none";
+
+  forgotSection.style.display =
+    "none";
+
+  dashboard.style.display =
+    "none";
+
+  logoutBtn.style.display =
+    "none";
+
+  resetSection.style.display =
+    "block";
 
 }
 
 
+/* =====================================================
+   SHOW LOGIN
+===================================================== */
+
+function showLogin(){
+
+  loginSection.style.display =
+    "block";
+
+  forgotSection.style.display =
+    "none";
+
+  resetSection.style.display =
+    "none";
+
+  dashboard.style.display =
+    "none";
+
+  logoutBtn.style.display =
+    "none";
+
+}
+
+
+/* =====================================================
+   SHOW DASHBOARD
+===================================================== */
+
 function showDashboard(){
 
-  loginSection.style.display = "none";
-  dashboard.style.display = "block";
-  logoutBtn.style.display = "block";
+  if(recoveryMode){
+
+    return;
+
+  }
+
+
+  loginSection.style.display =
+    "none";
+
+  forgotSection.style.display =
+    "none";
+
+  resetSection.style.display =
+    "none";
+
+  dashboard.style.display =
+    "block";
+
+  logoutBtn.style.display =
+    "block";
+
 
   loadProducts();
 
 }
 
 
-logoutBtn.addEventListener("click", async () => {
+/* =====================================================
+   LOGOUT
+===================================================== */
 
-  await supabase.auth.signOut();
+logoutBtn.addEventListener(
+  "click",
+  async () => {
 
-  showLogin();
+    await db.auth.signOut();
 
-});
+    showLogin();
+
+  }
+);
 
 
-/* =========================
+/* =====================================================
    FORM EVENTS
-========================= */
+===================================================== */
 
 document
-  .getElementById("category")
-  .addEventListener("change", e => {
+  .getElementById(
+    "category"
+  )
+  .addEventListener(
+    "change",
+    e => {
 
-    populateSubcategories(e.target.value);
+      populateSubcategories(
+        e.target.value
+      );
 
-  });
-
-
-document
-  .getElementById("filterCategory")
-  .addEventListener("change", e => {
-
-    populateSubcategories(
-      e.target.value,
-      "filterSubcategory"
-    );
-
-    renderProducts();
-
-  });
+    }
+  );
 
 
 document
-  .getElementById("filterSubcategory")
+  .getElementById(
+    "filterCategory"
+  )
+  .addEventListener(
+    "change",
+    e => {
+
+      populateSubcategories(
+        e.target.value,
+        "filterSubcategory"
+      );
+
+      renderProducts();
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "filterSubcategory"
+  )
   .addEventListener(
     "change",
     renderProducts
@@ -1047,7 +2129,9 @@ document
 
 
 document
-  .getElementById("filterStatus")
+  .getElementById(
+    "filterStatus"
+  )
   .addEventListener(
     "change",
     renderProducts
@@ -1055,7 +2139,9 @@ document
 
 
 document
-  .getElementById("filterHighlight")
+  .getElementById(
+    "filterHighlight"
+  )
   .addEventListener(
     "change",
     renderProducts
@@ -1063,7 +2149,9 @@ document
 
 
 document
-  .getElementById("sortProducts")
+  .getElementById(
+    "sortProducts"
+  )
   .addEventListener(
     "change",
     renderProducts
@@ -1071,7 +2159,9 @@ document
 
 
 document
-  .getElementById("searchInput")
+  .getElementById(
+    "searchInput"
+  )
   .addEventListener(
     "input",
     renderProducts
@@ -1079,45 +2169,65 @@ document
 
 
 document
-  .getElementById("highlighted")
-  .addEventListener("change", e => {
+  .getElementById(
+    "highlighted"
+  )
+  .addEventListener(
+    "change",
+    e => {
 
-    document.getElementById("highlightDates")
-      .style.display =
-      e.target.checked
-      ? "block"
-      : "none";
-
-  });
-
-
-document
-  .getElementById("imageUrl")
-  .addEventListener("input", e => {
-
-    const preview =
-      document.getElementById("imagePreview");
-
-    if(e.target.value.trim()){
-
-      preview.src =
-        e.target.value.trim();
-
-      preview.style.display =
-        "block";
-
-    }else{
-
-      preview.style.display =
-        "none";
+      document
+        .getElementById(
+          "highlightDates"
+        )
+        .style.display =
+        e.target.checked
+        ? "block"
+        : "none";
 
     }
-
-  });
+  );
 
 
 document
-  .getElementById("saveBtn")
+  .getElementById(
+    "imageUrl"
+  )
+  .addEventListener(
+    "input",
+    e => {
+
+      const preview =
+        document.getElementById(
+          "imagePreview"
+        );
+
+
+      if(
+        e.target.value.trim()
+      ){
+
+        preview.src =
+          e.target.value.trim();
+
+        preview.style.display =
+          "block";
+
+      }else{
+
+        preview.style.display =
+          "none";
+
+      }
+
+    }
+  );
+
+
+document
+  .getElementById(
+    "saveBtn"
+  )
   .addEventListener(
     "click",
     saveProduct
@@ -1125,7 +2235,9 @@ document
 
 
 document
-  .getElementById("cancelEdit")
+  .getElementById(
+    "cancelEdit"
+  )
   .addEventListener(
     "click",
     resetForm
@@ -1133,29 +2245,35 @@ document
 
 
 document
-  .getElementById("refreshBtn")
+  .getElementById(
+    "refreshBtn"
+  )
   .addEventListener(
     "click",
     loadProducts
   );
 
 
-/* =========================
+/* =====================================================
    LOAD PRODUCTS
-========================= */
+===================================================== */
 
 async function loadProducts(){
 
   const {
     data,
     error
-  } = await supabase
-    .from("products")
-    .select("*")
-    .order(
-      "created_at",
-      { ascending:false }
-    );
+  } =
+    await db
+      .from("products")
+      .select("*")
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
 
   if(error){
 
@@ -1165,78 +2283,120 @@ async function loadProducts(){
     );
 
     return;
+
   }
 
-  products = data || [];
+
+  products =
+    data || [];
+
 
   updateStats();
+
   renderProducts();
 
 }
 
 
-/* =========================
+/* =====================================================
    SAVE PRODUCT
-========================= */
+===================================================== */
 
 async function saveProduct(){
 
   const name =
     document
-      .getElementById("productName")
-      .value.trim();
+      .getElementById(
+        "productName"
+      )
+      .value
+      .trim();
+
 
   const category =
     document
-      .getElementById("category")
+      .getElementById(
+        "category"
+      )
       .value;
+
 
   const subcategory =
     document
-      .getElementById("subcategory")
+      .getElementById(
+        "subcategory"
+      )
       .value;
+
 
   const description =
     document
-      .getElementById("description")
-      .value.trim();
+      .getElementById(
+        "description"
+      )
+      .value
+      .trim();
+
 
   const image_url =
     document
-      .getElementById("imageUrl")
-      .value.trim();
+      .getElementById(
+        "imageUrl"
+      )
+      .value
+      .trim();
+
 
   const affiliate_url =
     document
-      .getElementById("affiliateUrl")
-      .value.trim();
+      .getElementById(
+        "affiliateUrl"
+      )
+      .value
+      .trim();
+
 
   const active =
     document
-      .getElementById("active")
+      .getElementById(
+        "active"
+      )
       .checked;
+
 
   const is_highlighted =
     document
-      .getElementById("highlighted")
+      .getElementById(
+        "highlighted"
+      )
       .checked;
+
 
   const highlight_start =
     document
-      .getElementById("highlightStart")
-      .value || null;
+      .getElementById(
+        "highlightStart"
+      )
+      .value ||
+      null;
+
 
   const highlight_end =
     document
-      .getElementById("highlightEnd")
-      .value || null;
+      .getElementById(
+        "highlightEnd"
+      )
+      .value ||
+      null;
 
 
-  if(!name ||
-     !category ||
-     !subcategory ||
-     !image_url ||
-     !affiliate_url){
+  if(
+    !name ||
+    !category ||
+    !subcategory ||
+    !image_url ||
+    !affiliate_url
+  ){
 
     showFormMessage(
       "Please fill all required fields.",
@@ -1244,13 +2404,16 @@ async function saveProduct(){
     );
 
     return;
+
   }
 
 
   if(is_highlighted){
 
-    if(!highlight_start ||
-       !highlight_end){
+    if(
+      !highlight_start ||
+      !highlight_end
+    ){
 
       showFormMessage(
         "Highlight start and end dates are required.",
@@ -1258,9 +2421,14 @@ async function saveProduct(){
       );
 
       return;
+
     }
 
-    if(highlight_start > highlight_end){
+
+    if(
+      highlight_start >
+      highlight_end
+    ){
 
       showFormMessage(
         "Start date cannot be after end date.",
@@ -1268,6 +2436,7 @@ async function saveProduct(){
       );
 
       return;
+
     }
 
   }
@@ -1276,12 +2445,19 @@ async function saveProduct(){
   const payload = {
 
     name,
+
     category,
+
     subcategory,
+
     description,
+
     image_url,
+
     affiliate_url,
+
     active,
+
     is_highlighted,
 
     highlight_start:
@@ -1301,9 +2477,15 @@ async function saveProduct(){
 
 
   const saveBtn =
-    document.getElementById("saveBtn");
+    document.getElementById(
+      "saveBtn"
+    );
 
-  saveBtn.disabled = true;
+
+  saveBtn.disabled =
+    true;
+
+
   saveBtn.textContent =
     editingId
     ? "Updating..."
@@ -1313,144 +2495,217 @@ async function saveProduct(){
   let result;
 
 
-  if(editingId){
+  try{
 
-    result =
-      await supabase
-        .from("products")
-        .update(payload)
-        .eq("id", editingId);
+    if(editingId){
 
-  }else{
+      result =
+        await db
+          .from("products")
+          .update(payload)
+          .eq(
+            "id",
+            editingId
+          );
 
-    result =
-      await supabase
-        .from("products")
-        .insert(payload);
+    }else{
+
+      result =
+        await db
+          .from("products")
+          .insert(
+            payload
+          );
+
+    }
+
+
+    if(result.error){
+
+      showFormMessage(
+        result.error.message,
+        "error"
+      );
+
+      return;
+
+    }
+
+
+    showFormMessage(
+      editingId
+      ? "Product updated successfully."
+      : "Product added successfully.",
+      "success"
+    );
+
+
+    resetForm();
+
+    await loadProducts();
 
   }
 
-
-  saveBtn.disabled = false;
-
-  saveBtn.textContent =
-    editingId
-    ? "Update Product"
-    : "Add Product";
-
-
-  if(result.error){
+  catch(error){
 
     showFormMessage(
-      result.error.message,
+      error.message ||
+      "Unable to save product.",
       "error"
     );
 
-    return;
   }
 
+  finally{
 
-  showFormMessage(
-    editingId
-    ? "Product updated successfully."
-    : "Product added successfully.",
-    "success"
-  );
+    saveBtn.disabled =
+      false;
 
+    saveBtn.textContent =
+      editingId
+      ? "Update Product"
+      : "Add Product";
 
-  resetForm();
-  loadProducts();
+  }
 
 }
 
 
-/* =========================
-   EDIT
-========================= */
+/* =====================================================
+   EDIT PRODUCT
+===================================================== */
 
 function editProduct(id){
 
   const product =
     products.find(
-      p => String(p.id) === String(id)
+      p =>
+        String(p.id) ===
+        String(id)
     );
 
-  if(!product) return;
 
-  editingId = product.id;
+  if(!product)
+    return;
+
+
+  editingId =
+    product.id;
+
 
   document
-    .getElementById("formTitle")
+    .getElementById(
+      "formTitle"
+    )
     .textContent =
     "Edit Product";
 
+
   document
-    .getElementById("saveBtn")
+    .getElementById(
+      "saveBtn"
+    )
     .textContent =
     "Update Product";
 
+
   document
-    .getElementById("cancelEdit")
+    .getElementById(
+      "cancelEdit"
+    )
     .style.display =
     "block";
 
 
   document
-    .getElementById("productName")
+    .getElementById(
+      "productName"
+    )
     .value =
     product.name || "";
 
+
   document
-    .getElementById("category")
+    .getElementById(
+      "category"
+    )
     .value =
     product.category || "";
+
 
   populateSubcategories(
     product.category || ""
   );
 
+
   document
-    .getElementById("subcategory")
+    .getElementById(
+      "subcategory"
+    )
     .value =
     product.subcategory || "";
 
+
   document
-    .getElementById("description")
+    .getElementById(
+      "description"
+    )
     .value =
     product.description || "";
 
+
   document
-    .getElementById("imageUrl")
+    .getElementById(
+      "imageUrl"
+    )
     .value =
     product.image_url || "";
 
+
   document
-    .getElementById("affiliateUrl")
+    .getElementById(
+      "affiliateUrl"
+    )
     .value =
     product.affiliate_url || "";
 
+
   document
-    .getElementById("active")
+    .getElementById(
+      "active"
+    )
     .checked =
     product.active !== false;
 
+
   document
-    .getElementById("highlighted")
+    .getElementById(
+      "highlighted"
+    )
     .checked =
     product.is_highlighted === true;
 
+
   document
-    .getElementById("highlightStart")
+    .getElementById(
+      "highlightStart"
+    )
     .value =
     product.highlight_start || "";
 
+
   document
-    .getElementById("highlightEnd")
+    .getElementById(
+      "highlightEnd"
+    )
     .value =
     product.highlight_end || "";
 
+
   document
-    .getElementById("highlightDates")
+    .getElementById(
+      "highlightDates"
+    )
     .style.display =
     product.is_highlighted
     ? "block"
@@ -1458,7 +2713,10 @@ function editProduct(id){
 
 
   const preview =
-    document.getElementById("imagePreview");
+    document.getElementById(
+      "imagePreview"
+    );
+
 
   if(product.image_url){
 
@@ -1477,25 +2735,32 @@ function editProduct(id){
 
 
   window.scrollTo({
+
     top:0,
+
     behavior:"smooth"
+
   });
 
 }
 
 
-/* =========================
-   DELETE
-========================= */
+/* =====================================================
+   DELETE PRODUCT
+===================================================== */
 
 async function deleteProduct(id){
 
   const product =
     products.find(
-      p => String(p.id) === String(id)
+      p =>
+        String(p.id) ===
+        String(id)
     );
 
-  if(!product) return;
+
+  if(!product)
+    return;
 
 
   const confirmed =
@@ -1503,15 +2768,21 @@ async function deleteProduct(id){
       `Delete "${product.name}"?`
     );
 
-  if(!confirmed) return;
+
+  if(!confirmed)
+    return;
 
 
   const {
     error
-  } = await supabase
-    .from("products")
-    .delete()
-    .eq("id", id);
+  } =
+    await db
+      .from("products")
+      .delete()
+      .eq(
+        "id",
+        id
+      );
 
 
   if(error){
@@ -1522,6 +2793,7 @@ async function deleteProduct(id){
     );
 
     return;
+
   }
 
 
@@ -1530,9 +2802,9 @@ async function deleteProduct(id){
 }
 
 
-/* =========================
-   TOGGLE ACTIVE
-========================= */
+/* =====================================================
+   ENABLE / DISABLE
+===================================================== */
 
 async function toggleActive(
   id,
@@ -1541,14 +2813,22 @@ async function toggleActive(
 
   const {
     error
-  } = await supabase
-    .from("products")
-    .update({
-      active:!currentStatus,
-      updated_at:
-        new Date().toISOString()
-    })
-    .eq("id", id);
+  } =
+    await db
+      .from("products")
+      .update({
+
+        active:
+          !currentStatus,
+
+        updated_at:
+          new Date().toISOString()
+
+      })
+      .eq(
+        "id",
+        id
+      );
 
 
   if(error){
@@ -1559,6 +2839,7 @@ async function toggleActive(
     );
 
     return;
+
   }
 
 
@@ -1567,128 +2848,209 @@ async function toggleActive(
 }
 
 
-/* =========================
-   RESET FORM
-========================= */
+/* =====================================================
+   RESET PRODUCT FORM
+===================================================== */
 
 function resetForm(){
 
-  editingId = null;
+  editingId =
+    null;
+
 
   document
-    .getElementById("formTitle")
+    .getElementById(
+      "formTitle"
+    )
     .textContent =
     "Add Product";
 
+
   document
-    .getElementById("saveBtn")
+    .getElementById(
+      "saveBtn"
+    )
     .textContent =
     "Add Product";
 
+
   document
-    .getElementById("cancelEdit")
+    .getElementById(
+      "cancelEdit"
+    )
     .style.display =
     "none";
 
 
   document
-    .getElementById("productId")
-    .value = "";
+    .getElementById(
+      "productId"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("productName")
-    .value = "";
+    .getElementById(
+      "productName"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("category")
-    .value = "";
+    .getElementById(
+      "category"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("subcategory")
+    .getElementById(
+      "subcategory"
+    )
     .innerHTML =
-    `<option value="">Select Subcategory</option>`;
+    `<option value="">
+      Select Subcategory
+    </option>`;
+
 
   document
-    .getElementById("description")
-    .value = "";
+    .getElementById(
+      "description"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("imageUrl")
-    .value = "";
+    .getElementById(
+      "imageUrl"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("affiliateUrl")
-    .value = "";
+    .getElementById(
+      "affiliateUrl"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("active")
-    .checked = true;
+    .getElementById(
+      "active"
+    )
+    .checked =
+    true;
+
 
   document
-    .getElementById("highlighted")
-    .checked = false;
+    .getElementById(
+      "highlighted"
+    )
+    .checked =
+    false;
+
 
   document
-    .getElementById("highlightStart")
-    .value = "";
+    .getElementById(
+      "highlightStart"
+    )
+    .value =
+    "";
+
 
   document
-    .getElementById("highlightEnd")
-    .value = "";
+    .getElementById(
+      "highlightEnd"
+    )
+    .value =
+    "";
+
 
   document
-    getElementByIdSafe("highlightDates")
+    .getElementById(
+      "highlightDates"
+    )
     .style.display =
     "none";
 
+
   document
-    .getElementById("imagePreview")
+    .getElementById(
+      "imagePreview"
+    )
     .style.display =
     "none";
 
+
   document
-    .getElementById("formMessage")
-    .textContent = "";
+    .getElementById(
+      "formMessage"
+    )
+    .textContent =
+    "";
 
 }
 
 
-/* =========================
-   FILTER + SEARCH
-========================= */
+/* =====================================================
+   SEARCH / FILTER / SORT
+===================================================== */
 
 function renderProducts(){
 
   const search =
     document
-      .getElementById("searchInput")
+      .getElementById(
+        "searchInput"
+      )
       .value
       .toLowerCase()
       .trim();
 
+
   const category =
     document
-      .getElementById("filterCategory")
+      .getElementById(
+        "filterCategory"
+      )
       .value;
+
 
   const subcategory =
     document
-      .getElementById("filterSubcategory")
+      .getElementById(
+        "filterSubcategory"
+      )
       .value;
+
 
   const status =
     document
-      .getElementById("filterStatus")
+      .getElementById(
+        "filterStatus"
+      )
       .value;
+
 
   const highlight =
     document
-      .getElementById("filterHighlight")
+      .getElementById(
+        "filterHighlight"
+      )
       .value;
+
 
   const sort =
     document
-      .getElementById("sortProducts")
+      .getElementById(
+        "sortProducts"
+      )
       .value;
 
 
@@ -1696,129 +3058,163 @@ function renderProducts(){
     [...products];
 
 
-  /* SEARCH */
-
   if(search){
 
     filtered =
-      filtered.filter(p =>
+      filtered.filter(
+        p =>
 
-        (p.name || "")
-          .toLowerCase()
-          .includes(search)
+          (p.name || "")
+            .toLowerCase()
+            .includes(search)
 
-        ||
+          ||
 
-        (p.description || "")
-          .toLowerCase()
-          .includes(search)
+          (p.description || "")
+            .toLowerCase()
+            .includes(search)
 
-        ||
+          ||
 
-        (p.category || "")
-          .toLowerCase()
-          .includes(search)
+          (p.category || "")
+            .toLowerCase()
+            .includes(search)
 
-        ||
+          ||
 
-        (p.subcategory || "")
-          .toLowerCase()
-          .includes(search)
+          (p.subcategory || "")
+            .toLowerCase()
+            .includes(search)
 
       );
 
   }
 
-
-  /* CATEGORY */
 
   if(category){
 
     filtered =
       filtered.filter(
-        p => p.category === category
+        p =>
+          p.category ===
+          category
       );
 
   }
 
-
-  /* SUBCATEGORY */
 
   if(subcategory){
 
     filtered =
       filtered.filter(
-        p => p.subcategory === subcategory
+        p =>
+          p.subcategory ===
+          subcategory
       );
 
   }
 
 
-  /* STATUS */
-
-  if(status === "active"){
+  if(
+    status ===
+    "active"
+  ){
 
     filtered =
       filtered.filter(
-        p => p.active === true
+        p =>
+          p.active ===
+          true
       );
 
   }
 
-  if(status === "inactive"){
+
+  if(
+    status ===
+    "inactive"
+  ){
 
     filtered =
       filtered.filter(
-        p => p.active === false
+        p =>
+          p.active ===
+          false
       );
 
   }
 
 
-  /* HIGHLIGHT */
-
-  if(highlight === "highlight"){
+  if(
+    highlight ===
+    "highlight"
+  ){
 
     filtered =
       filtered.filter(
-        p => p.is_highlighted === true
+        p =>
+          p.is_highlighted ===
+          true
       );
 
   }
 
-  if(highlight === "normal"){
+
+  if(
+    highlight ===
+    "normal"
+  ){
 
     filtered =
       filtered.filter(
-        p => p.is_highlighted !== true
+        p =>
+          p.is_highlighted !==
+          true
       );
 
   }
 
 
-  /* SORT */
-
-  if(sort === "newest"){
+  if(
+    sort ===
+    "newest"
+  ){
 
     filtered.sort(
       (a,b) =>
-        new Date(b.created_at) -
-        new Date(a.created_at)
+        new Date(
+          b.created_at
+        ) -
+        new Date(
+          a.created_at
+        )
     );
 
   }
 
-  if(sort === "oldest"){
+
+  if(
+    sort ===
+    "oldest"
+  ){
 
     filtered.sort(
       (a,b) =>
-        new Date(a.created_at) -
-        new Date(b.created_at)
+        new Date(
+          a.created_at
+        ) -
+        new Date(
+          b.created_at
+        )
     );
 
   }
 
-  if(sort === "az"){
+
+  if(
+    sort ===
+    "az"
+  ){
 
     filtered.sort(
       (a,b) =>
@@ -1830,7 +3226,11 @@ function renderProducts(){
 
   }
 
-  if(sort === "za"){
+
+  if(
+    sort ===
+    "za"
+  ){
 
     filtered.sort(
       (a,b) =>
@@ -1844,7 +3244,9 @@ function renderProducts(){
 
 
   document
-    .getElementById("productCount")
+    .getElementById(
+      "productCount"
+    )
     .textContent =
     `${filtered.length} product${
       filtered.length === 1
@@ -1867,34 +3269,45 @@ function renderProducts(){
       </div>`;
 
     return;
+
   }
 
 
   list.innerHTML =
     filtered
-      .map(productCard)
+      .map(
+        productCard
+      )
       .join("");
 
 }
 
 
-/* =========================
+/* =====================================================
    PRODUCT CARD
-========================= */
+===================================================== */
 
 function productCard(p){
 
   const activeBadge =
     p.active
-    ? `<span class="badge active">Active</span>`
-    : `<span class="badge inactive">Inactive</span>`;
+
+    ? `<span class="badge active">
+        Active
+      </span>`
+
+    : `<span class="badge inactive">
+        Inactive
+      </span>`;
 
 
   const highlightBadge =
     p.is_highlighted
+
     ? `<span class="badge highlight">
         ⭐ Highlighted
       </span>`
+
     : "";
 
 
@@ -1904,9 +3317,13 @@ function productCard(p){
     p.highlight_end
 
     ? `<div class="meta">
-        ${p.highlight_start}
+        ${escapeHtml(
+          p.highlight_start
+        )}
         →
-        ${p.highlight_end}
+        ${escapeHtml(
+          p.highlight_end
+        )}
       </div>`
 
     : "";
@@ -1927,32 +3344,47 @@ function productCard(p){
         onerror="this.style.opacity='.3'"
       >
 
+
       <div>
 
         <div class="product-name">
           ${escapeHtml(
-            p.name || "Untitled"
+            p.name ||
+            "Untitled"
           )}
         </div>
+
 
         <div class="meta">
+
           ${escapeHtml(
-            p.category || "No category"
+            p.category ||
+            "No category"
           )}
+
           →
+
           ${escapeHtml(
-            p.subcategory || "No subcategory"
+            p.subcategory ||
+            "No subcategory"
           )}
+
         </div>
 
+
         <div class="badges">
+
           ${activeBadge}
+
           ${highlightBadge}
+
         </div>
+
 
         ${dates}
 
       </div>
+
 
       <div class="actions">
 
@@ -1963,6 +3395,7 @@ function productCard(p){
           Edit
         </button>
 
+
         <button
           class="small-btn"
           onclick="toggleActive(
@@ -1970,10 +3403,13 @@ function productCard(p){
             ${p.active ? "true" : "false"}
           )"
         >
-          ${p.active
+          ${
+            p.active
             ? "Disable"
-            : "Enable"}
+            : "Enable"
+          }
         </button>
+
 
         <button
           class="danger-btn"
@@ -1991,62 +3427,93 @@ function productCard(p){
 }
 
 
-/* =========================
-   STATS
-========================= */
+/* =====================================================
+   STATISTICS
+===================================================== */
 
 function updateStats(){
 
   const total =
     products.length;
 
+
   const active =
     products.filter(
-      p => p.active === true
+      p =>
+        p.active ===
+        true
     ).length;
 
+
   const inactive =
-    total - active;
+    total -
+    active;
+
 
   const highlighted =
     products.filter(
-      p => p.is_highlighted === true
+      p =>
+        p.is_highlighted ===
+        true
     ).length;
+
 
   const categories =
     new Set(
       products
-        .map(p => p.category)
+        .map(
+          p =>
+            p.category
+        )
         .filter(Boolean)
     ).size;
 
 
   document
-    .getElementById("totalProducts")
-    .textContent = total;
+    .getElementById(
+      "totalProducts"
+    )
+    .textContent =
+    total;
+
 
   document
-    .getElementById("activeProducts")
-    .textContent = active;
+    .getElementById(
+      "activeProducts"
+    )
+    .textContent =
+    active;
+
 
   document
-    .getElementById("inactiveProducts")
-    .textContent = inactive;
+    .getElementById(
+      "inactiveProducts"
+    )
+    .textContent =
+    inactive;
+
 
   document
-    .getElementById("highlightProducts")
-    .textContent = highlighted;
+    .getElementById(
+      "highlightProducts"
+    )
+    .textContent =
+    highlighted;
+
 
   document
-    .getElementById("categoryCount")
-    .textContent = categories;
+    .getElementById(
+      "categoryCount"
+    )
+    .textContent =
+    categories;
 
 }
 
 
-/* =========================
+/* =====================================================
    HELPERS
-========================= */
+===================================================== */
 
 function showFormMessage(
   message,
@@ -2058,10 +3525,15 @@ function showFormMessage(
       "formMessage"
     );
 
+
   el.className =
-    type === "error"
-    ? "error"
-    : "success";
+    type ===
+    "error"
+
+    ? "message error"
+
+    : "message success";
+
 
   el.textContent =
     message;
@@ -2071,35 +3543,53 @@ function showFormMessage(
 
 function escapeHtml(value){
 
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+  return String(
+    value ?? ""
+  )
+
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
 
 }
 
 
 function escapeAttribute(value){
 
-  return escapeHtml(value);
+  return escapeHtml(
+    value
+  );
 
 }
 
 
-function getElementByIdSafe(id){
-
-  return document.getElementById(id);
-
-}
-
-
-/* =========================
+/* =====================================================
    START
-========================= */
+===================================================== */
 
 populateMainCategories();
+
 checkSession();
 
 </script>
