@@ -841,37 +841,6 @@
 
   <br><br>
 
-  <div style="max-width:900px;margin:0 auto;color:#b9b4aa;line-height:1.8;">
-    <strong style="color:#fff;">About Aaivra Picks</strong>
-    <br>
-    Discover curated products across fashion, home, gadgets, beauty,
-    kids, fitness, travel, gifts and everyday lifestyle.
-    We help you discover useful and interesting products from selected
-    online marketplaces.
-  </div>
-
-  <br>
-
-  <div style="font-size:11px;color:#8f8b84;">
-    <strong style="color:#d7d2c9;">Demo Footer Data</strong>
-    &nbsp;·&nbsp;
-    250+ Curated Finds
-    &nbsp;·&nbsp;
-    10 Categories
-    &nbsp;·&nbsp;
-    Updated Weekly
-  </div>
-
-  <br>
-
-  <div style="font-size:11px;color:#8f8b84;">
-    Affiliate Disclosure: Aaivra Picks may earn a commission when you
-    purchase through selected affiliate links. Prices and availability
-    may change on the retailer's website.
-  </div>
-
-  <br>
-
   © 2026 Aaivra Picks
 
 </footer>
@@ -910,6 +879,75 @@ let currentCategory = "All";
 
 let searchTerm = "";
 
+/* ================= ANALYTICS ================= */
+
+const viewedProductIds = new Set();
+
+let analyticsObserver = null;
+
+function trackAnalyticsEvent(productId, eventType){
+  if(!productId) return;
+
+  db
+    .from("analytics_events")
+    .insert({
+      product_id: productId,
+      event_type: eventType
+    })
+    .then(({error}) => {
+      if(error){
+        console.error("Analytics error:", error);
+      }
+    });
+}
+
+function trackProductView(product){
+  if(!product || viewedProductIds.has(product.id)){
+    return;
+  }
+
+  viewedProductIds.add(product.id);
+  trackAnalyticsEvent(product.id, "view");
+}
+
+function observeProductViews(){
+  if(analyticsObserver){
+    analyticsObserver.disconnect();
+  }
+
+  analyticsObserver = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if(
+          entry.isIntersecting &&
+          entry.intersectionRatio >= 0.5
+        ){
+          const productId =
+            entry.target.dataset.productId;
+
+          const product =
+            products.find(
+              p => String(p.id) === String(productId)
+            );
+
+          if(product){
+            trackProductView(product);
+            analyticsObserver.unobserve(entry.target);
+          }
+        }
+      });
+    },
+    {
+      threshold:[0.5]
+    }
+  );
+
+  document
+    .querySelectorAll("[data-product-id]")
+    .forEach(card => {
+      analyticsObserver.observe(card);
+    });
+}
 
 /* ================= CAROUSEL ================= */
 
@@ -1106,6 +1144,8 @@ function renderHighlights(){
   updateHighlightPosition();
 
   setupHighlightAutoPlay();
+
+  observeProductViews();
 
 }
 
@@ -1628,6 +1668,8 @@ function renderProducts(){
     }
   );
 
+  observeProductViews();
+
 }
 
 
@@ -1648,6 +1690,8 @@ function createProductCard(
     isHighlight
       ? "card highlight-card"
       : "card";
+
+  card.dataset.productId = product.id;
 
 
   const image =
@@ -1750,9 +1794,13 @@ function createProductCard(
 
 function trackClick(product){
 
-  console.log(
-    "Product click:",
-    product.name
+  if(!product || !product.id){
+    return;
+  }
+
+  trackAnalyticsEvent(
+    product.id,
+    "click"
   );
 
 }
