@@ -115,12 +115,6 @@ select{
   outline:none;
 }
 
-.password-wrap{position:relative;}
-.password-wrap input{padding-right:48px;}
-.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:34px;height:34px;border:0;background:transparent;color:#777;cursor:pointer;font-size:17px;padding:0;display:flex;align-items:center;justify-content:center;}
-.password-toggle:hover{color:var(--gold);}
-.password-toggle:focus{outline:2px solid rgba(178,138,69,.25);border-radius:6px;}
-
 input:focus,
 textarea:focus,
 select:focus{
@@ -408,6 +402,10 @@ textarea{
     grid-template-columns:1fr;
   }
 }
+
+.password-wrap{position:relative;}
+.password-wrap input{padding-right:46px;}
+.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:#777;cursor:pointer;font-size:18px;padding:4px 6px;}
 </style>
 </head>
 
@@ -437,10 +435,7 @@ textarea{
 
   <div class="form-group">
     <label>Password</label>
-    <div class="password-wrap">
-      <input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password">
-      <button type="button" class="password-toggle" data-target="loginPassword" aria-label="Show password" title="Show password">👁</button>
-    </div>
+    <div class="password-wrap"><input id="loginPassword" type="password" placeholder="Password" autocomplete="current-password"><button type="button" class="password-toggle" data-target="loginPassword" aria-label="Show password">👁</button></div>
   </div>
 
   <button id="loginBtn" class="primary-btn">
@@ -483,18 +478,12 @@ textarea{
 
   <div class="form-group">
     <label>New Password</label>
-    <div class="password-wrap">
-      <input id="newPassword" type="password" placeholder="Enter new password" autocomplete="new-password">
-      <button type="button" class="password-toggle" data-target="newPassword" aria-label="Show password" title="Show password">👁</button>
-    </div>
+    <div class="password-wrap"><input id="newPassword" type="password" placeholder="Enter new password" autocomplete="new-password"><button type="button" class="password-toggle" data-target="newPassword" aria-label="Show password">👁</button></div>
   </div>
 
   <div class="form-group">
     <label>Confirm Password</label>
-    <div class="password-wrap">
-      <input id="confirmPassword" type="password" placeholder="Confirm new password" autocomplete="new-password">
-      <button type="button" class="password-toggle" data-target="confirmPassword" aria-label="Show password" title="Show password">👁</button>
-    </div>
+    <div class="password-wrap"><input id="confirmPassword" type="password" placeholder="Confirm new password" autocomplete="new-password"><button type="button" class="password-toggle" data-target="confirmPassword" aria-label="Show password">👁</button></div>
   </div>
 
   <button
@@ -723,8 +712,8 @@ const SUPABASE_KEY =
   "sb_publishable_97lkGMFrkcsJnM5XLaDJnQ_ohrWhsbe";
 
 
-const { createClient } =
-  supabase.createClient(
+const db =
+  window.supabase.createClient(
     SUPABASE_URL,
     SUPABASE_KEY
   );
@@ -913,31 +902,6 @@ function populateSubcategories(
 
 
 /* =========================
-   SHOW / HIDE PASSWORD
-========================= */
-
-document.querySelectorAll(".password-toggle").forEach(button => {
-  button.addEventListener("click", () => {
-    const input = document.getElementById(button.dataset.target);
-    if(!input) return;
-
-    const isPassword = input.type === "password";
-    input.type = isPassword ? "text" : "password";
-
-    button.textContent = isPassword ? "🙈" : "👁";
-    button.setAttribute(
-      "aria-label",
-      isPassword ? "Hide password" : "Show password"
-    );
-    button.setAttribute(
-      "title",
-      isPassword ? "Hide password" : "Show password"
-    );
-  });
-});
-
-
-/* =========================
    AUTH
 ========================= */
 
@@ -966,7 +930,7 @@ async function login(){
   loginBtn.textContent = "Logging in...";
 
   const { error } =
-    await supabase.auth.signInWithPassword({
+    await db.auth.signInWithPassword({
       email,
       password
     });
@@ -997,67 +961,79 @@ async function login(){
 ========================= */
 
 document.getElementById("forgotPasswordBtn")
-  .addEventListener("click", async () => {
+  .addEventListener("click", () => {
 
-    const emailInput = document.getElementById("loginEmail");
-    const email = emailInput.value.trim();
-    const btn = document.getElementById("forgotPasswordBtn");
+    document.getElementById("loginSection").style.display = "none";
+    document.getElementById("dashboard").style.display = "none";
+    document.getElementById("resetSection").style.display = "block";
+    document.getElementById("resetSection").dataset.mode = "request";
 
-    loginMessage.className = "";
-    loginMessage.textContent = "";
-
-    if(!email){
-      loginMessage.className = "error";
-      loginMessage.textContent = "Please enter your admin email first.";
-      emailInput.focus();
-      return;
+    const email = document.getElementById("loginEmail").value.trim();
+    if(email){
+      document.getElementById("newPassword").value = "";
+      document.getElementById("confirmPassword").value = "";
+      document.getElementById("resetMessage").textContent = "";
+      document.getElementById("resetSection").querySelector("h1").textContent = "Forgot Password";
+      document.getElementById("resetSection").querySelector("p").textContent = "Enter your admin email. We will send a password reset link.";
+      document.getElementById("newPassword").closest(".form-group").style.display = "none";
+      document.getElementById("confirmPassword").closest(".form-group").style.display = "none";
+      document.getElementById("updatePasswordBtn").textContent = "Send Reset Link";
+      document.getElementById("resetSection").querySelector("#updatePasswordBtn").dataset.email = email;
+    } else {
+      document.getElementById("resetSection").querySelector("h1").textContent = "Forgot Password";
+      document.getElementById("resetSection").querySelector("p").textContent = "Enter your admin email. We will send a password reset link.";
+      document.getElementById("newPassword").closest(".form-group").style.display = "none";
+      document.getElementById("confirmPassword").closest(".form-group").style.display = "none";
+      document.getElementById("updatePasswordBtn").textContent = "Send Reset Link";
+      document.getElementById("resetSection").querySelector("#updatePasswordBtn").dataset.email = "";
+      document.getElementById("resetMessage").textContent = "";
     }
-
-    if(!emailInput.checkValidity()){
-      loginMessage.className = "error";
-      loginMessage.textContent = "Please enter a valid email address.";
-      emailInput.focus();
-      return;
-    }
-
-    btn.disabled = true;
-    btn.textContent = "Sending reset link...";
-
-    const redirectTo =
-      window.location.origin + window.location.pathname;
-
-    const { error } =
-      await supabase.auth.resetPasswordForEmail(
-        email,
-        { redirectTo }
-      );
-
-    btn.disabled = false;
-    btn.textContent = "Forgot Password?";
-
-    if(error){
-      loginMessage.className = "error";
-      loginMessage.textContent = error.message;
-      return;
-    }
-
-    loginMessage.className = "success";
-    loginMessage.textContent =
-      "Password reset link sent. Check your email.";
   });
 
 
 document.getElementById("updatePasswordBtn")
   .addEventListener("click", async () => {
 
-    const newPassword =
-      document.getElementById("newPassword").value;
+    const section = document.getElementById("resetSection");
+    const message = document.getElementById("resetMessage");
+    const btn = document.getElementById("updatePasswordBtn");
 
-    const confirmPassword =
-      document.getElementById("confirmPassword").value;
+    if(section.dataset.mode === "request"){
+      let email = btn.dataset.email || document.getElementById("loginEmail").value.trim();
 
-    const message =
-      document.getElementById("resetMessage");
+      if(!email){
+        message.className = "error";
+        message.textContent = "Please enter your admin email first.";
+        return;
+      }
+
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        message.className = "error";
+        message.textContent = "Please enter a valid email address.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Sending...";
+
+      try{
+        const redirectTo = window.location.origin + window.location.pathname;
+        const { error } = await db.auth.resetPasswordForEmail(email, { redirectTo });
+        if(error) throw error;
+        message.className = "success";
+        message.textContent = "Password reset link sent. Check your email.";
+      }catch(error){
+        message.className = "error";
+        message.textContent = error.message || "Unable to send reset link.";
+      }finally{
+        btn.disabled = false;
+        btn.textContent = "Send Reset Link";
+      }
+      return;
+    }
+
+    const newPassword = document.getElementById("newPassword").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
 
     if(!newPassword || newPassword.length < 6){
       message.className = "error";
@@ -1071,51 +1047,67 @@ document.getElementById("updatePasswordBtn")
       return;
     }
 
-    const btn = document.getElementById("updatePasswordBtn");
     btn.disabled = true;
     btn.textContent = "Updating...";
 
-    const { error } = await supabase.auth.updateUser({
-      password: newPassword
-    });
-
-    btn.disabled = false;
-    btn.textContent = "Update Password";
-
-    if(error){
+    try{
+      const { error } = await db.auth.updateUser({ password: newPassword });
+      if(error) throw error;
+      message.className = "success";
+      message.textContent = "Password updated successfully. Login again.";
+      setTimeout(async () => {
+        await db.auth.signOut();
+        window.location.replace(window.location.origin + window.location.pathname);
+      }, 1200);
+    }catch(error){
       message.className = "error";
-      message.textContent = error.message;
-      return;
+      message.textContent = error.message || "Password update failed.";
+    }finally{
+      btn.disabled = false;
+      if(section.dataset.mode !== "request") btn.textContent = "Update Password";
     }
-
-    message.className = "success";
-    message.textContent = "Password updated successfully.";
-
-    setTimeout(() => {
-      window.history.replaceState({}, document.title, window.location.pathname + window.location.search);
-      document.getElementById("resetSection").style.display = "none";
-      showDashboard();
-    }, 700);
   });
 
-
-supabase.auth.onAuthStateChange((event) => {
+db.auth.onAuthStateChange((event) => {
   if(event === "PASSWORD_RECOVERY"){
+    const section = document.getElementById("resetSection");
+    section.dataset.mode = "update";
     loginSection.style.display = "none";
     dashboard.style.display = "none";
     logoutBtn.style.display = "none";
-    document.getElementById("resetSection").style.display = "block";
+    section.style.display = "block";
+    section.querySelector("h1").textContent = "Set New Password";
+    section.querySelector("p").textContent = "Enter your new Admin Panel password.";
+    document.getElementById("newPassword").closest(".form-group").style.display = "block";
+    document.getElementById("confirmPassword").closest(".form-group").style.display = "block";
+    document.getElementById("updatePasswordBtn").textContent = "Update Password";
+    document.getElementById("resetMessage").textContent = "";
   }
 });
 
 
 async function checkSession(){
 
+  if(window.location.hash.includes("type=recovery")){
+    const section = document.getElementById("resetSection");
+    section.dataset.mode = "update";
+    loginSection.style.display = "none";
+    dashboard.style.display = "none";
+    logoutBtn.style.display = "none";
+    section.style.display = "block";
+    section.querySelector("h1").textContent = "Set New Password";
+    section.querySelector("p").textContent = "Enter your new Admin Panel password.";
+    document.getElementById("newPassword").closest(".form-group").style.display = "block";
+    document.getElementById("confirmPassword").closest(".form-group").style.display = "block";
+    document.getElementById("updatePasswordBtn").textContent = "Update Password";
+    return;
+  }
+
   const {
     data:{
       session
     }
-  } = await supabase.auth.getSession();
+  } = await db.auth.getSession();
 
   if(session){
 
@@ -1152,7 +1144,7 @@ function showDashboard(){
 
 logoutBtn.addEventListener("click", async () => {
 
-  await supabase.auth.signOut();
+  await db.auth.signOut();
 
   showLogin();
 
@@ -1297,7 +1289,7 @@ async function loadProducts(){
   const {
     data,
     error
-  } = await supabase
+  } = await db
     .from("products")
     .select("*")
     .order(
@@ -1464,7 +1456,7 @@ async function saveProduct(){
   if(editingId){
 
     result =
-      await supabase
+      await db
         .from("products")
         .update(payload)
         .eq("id", editingId);
@@ -1472,7 +1464,7 @@ async function saveProduct(){
   }else{
 
     result =
-      await supabase
+      await db
         .from("products")
         .insert(payload);
 
@@ -1656,7 +1648,7 @@ async function deleteProduct(id){
 
   const {
     error
-  } = await supabase
+  } = await db
     .from("products")
     .delete()
     .eq("id", id);
@@ -1689,7 +1681,7 @@ async function toggleActive(
 
   const {
     error
-  } = await supabase
+  } = await db
     .from("products")
     .update({
       active:!currentStatus,
@@ -2241,6 +2233,18 @@ function getElementByIdSafe(id){
   return document.getElementById(id);
 
 }
+
+
+document.querySelectorAll(".password-toggle").forEach(button => {
+  button.addEventListener("click", () => {
+    const input = document.getElementById(button.dataset.target);
+    if(!input) return;
+    const show = input.type === "password";
+    input.type = show ? "text" : "password";
+    button.textContent = show ? "🙈" : "👁";
+    button.setAttribute("aria-label", show ? "Hide password" : "Show password");
+  });
+});
 
 
 /* =========================
